@@ -78,6 +78,7 @@ const Boletim: React.FC<BoletimProps> = ({ materia, periodo }) => {
     nota_etapa_4,
     segundo_semestre,
     quantidade_avaliacoes,
+    situacao,
     percentual_carga_horaria_frequentada,
   } = boletim;
 
@@ -163,6 +164,7 @@ const Boletim: React.FC<BoletimProps> = ({ materia, periodo }) => {
               quantidade_avaliacoes={quantidade_avaliacoes}
               nota_avaliacao_final={boletim.nota_avaliacao_final}
               segundo_semestre={segundo_semestre}
+              situacao={situacao}
               nota_etapa_1={nota_etapa_1}
               nota_etapa_2={nota_etapa_2}
               nota_etapa_3={nota_etapa_3}

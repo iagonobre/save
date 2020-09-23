@@ -3,6 +3,7 @@ import React from 'react';
 import { StatusBold, StatusContent } from './styles';
 
 interface SituationProps {
+  situacao: string;
   segundo_semestre: boolean;
   quantidade_avaliacoes: number;
   nota_avaliacao_final: {
@@ -23,6 +24,7 @@ interface SituationProps {
 }
 
 function calc({
+  situacao,
   segundo_semestre,
   quantidade_avaliacoes,
   nota_avaliacao_final,
@@ -31,6 +33,9 @@ function calc({
   nota_etapa_3,
   nota_etapa_4,
 }: SituationProps) {
+  if (situacao === 'Aprovado') {
+    return <StatusBold>Aprovado</StatusBold>;
+  }
   if (quantidade_avaliacoes === 2) {
     const notaFinal = (nota_etapa_1.nota * 2 + nota_etapa_2.nota * 3) / 5;
 
@@ -188,6 +193,7 @@ function calc({
 }
 
 const AcademicSituation: React.FC<SituationProps> = ({
+  situacao,
   segundo_semestre,
   quantidade_avaliacoes,
   nota_avaliacao_final,
@@ -197,6 +203,7 @@ const AcademicSituation: React.FC<SituationProps> = ({
   nota_etapa_4,
 }) => {
   return calc({
+    situacao,
     segundo_semestre,
     quantidade_avaliacoes,
     nota_avaliacao_final,

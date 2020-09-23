@@ -6,6 +6,7 @@ import AppRoutes from './app.routes';
 
 import Dashboard from '../pages/App/Estudos/Dashboard';
 import DarkReward from '../pages/App/DarkReward';
+import UpdateProfile from '../pages/App/Perfil/UpdateProfile';
 
 const { Navigator, Screen } = createStackNavigator();
 
@@ -16,6 +17,7 @@ const AppStackRoutes: React.FC = () => {
         <Screen name="AppRoutes" component={AppRoutes} />
         <Screen name="Dashboard" component={Dashboard} />
         <Screen name="DarkReward" component={DarkReward} />
+        <Screen name="UpdateProfile" component={UpdateProfile} />
       </Navigator>
     </NavigationContainer>
   );
