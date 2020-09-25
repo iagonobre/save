@@ -121,7 +121,11 @@ const Perfil: React.FC = () => {
             {situacao}
           </Text>
         </Bio>
-        <Form>
+        <Form
+          onSubmit={() => {
+            return undefined;
+          }}
+        >
           <InfoInput value={cpf} title="CPF" name="cpf" editable={false} />
           <InfoInput
             value={dataNascimento}
@@ -155,14 +159,13 @@ const Perfil: React.FC = () => {
             />
           )}
         </Form>
-
         {campus === 'PAR' ? (
           turma ? (
             <Picker
               disabled
               titleInfo="TURMA"
               placeholderLabel="Atualize seu perfil"
-              itemKey={student.turma}
+              value={student.turma}
               items={classes}
               onValueChange={() => {
                 return undefined;
@@ -174,7 +177,7 @@ const Perfil: React.FC = () => {
               disabled
               titleInfo="TURMA"
               placeholderLabel="Atualize seu perfil"
-              itemKey={student.turma}
+              value={student.turma}
               items={classes}
               onValueChange={() => {
                 return undefined;

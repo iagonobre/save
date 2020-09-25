@@ -2,7 +2,7 @@
   "expo": {
     "name": "SAVE",
     "slug": "Save",
-    "version": "1.0.4",
+    "version": "1.0.8",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -14,14 +14,22 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.save.genp"
     },
+    "notification": {
+      "icon": "./assets/notify.png",
+      "color": "#6b3b8b"
+    },
     "android": {
+      "googleServicesFile": "./google-services.json",
+      "useNextNotificationsApi": true,
       "package": "com.save.genp",
-      "versionCode": 5,
+      "versionCode": 9,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#6B3B8B"

@@ -1,5 +1,4 @@
 import styled, { css } from 'styled-components/native';
-import { RectButton } from 'react-native-gesture-handler';
 
 interface InputProps {
   isErrored: boolean;

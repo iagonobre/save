@@ -1,11 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
-import {
-  KeyboardAvoidingView,
-  Platform,
-  Keyboard,
-  TouchableWithoutFeedback,
-} from 'react-native';
+import { KeyboardAvoidingView, Platform } from 'react-native';
 
+import { useNavigation } from '@react-navigation/native';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
@@ -34,6 +30,7 @@ const UpdateProfile: React.FC = () => {
   const { email, campus, turma } = student;
   const [selectedClass, setSelectedClass] = useState(turma);
   const formRef = useRef<FormHandles>(null);
+  const { navigate } = useNavigation();
 
   const handleUpdate = useCallback(
     async (data: FormObject) => {
@@ -74,6 +71,7 @@ const UpdateProfile: React.FC = () => {
 
         updatedSuccess();
         updateUser(response.data);
+        navigate('Perfil');
       } catch (err) {
         if (err instanceof Yup.ValidationError) {
           getValidationErrors(err);
@@ -81,7 +79,7 @@ const UpdateProfile: React.FC = () => {
         updatedError();
       }
     },
-    [updateUser, token, selectedClass],
+    [updateUser, token, selectedClass, navigate],
   );
 
   return (

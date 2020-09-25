@@ -4,13 +4,17 @@ import { Feather } from '@expo/vector-icons';
 
 import { ThemeContext } from 'styled-components';
 
+import { useAuth } from '../hooks/auth';
 import Home from '../pages/App/Home';
 import Perfil from '../pages/App/Perfil';
 import Estudos from '../pages/App/Estudos';
+import Admin from '../pages/App/Admin';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
 const AppRoutes: React.FC = () => {
+  const { student } = useAuth();
+  const { admin } = student;
   const { colors } = useContext(ThemeContext);
   return (
     <Navigator
@@ -64,6 +68,17 @@ const AppRoutes: React.FC = () => {
           ),
         }}
       />
+      {admin && (
+        <Screen
+          name="Admin"
+          component={Admin}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Feather name="sliders" size={size} color={color} />
+            ),
+          }}
+        />
+      )}
     </Navigator>
   );
 };

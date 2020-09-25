@@ -37,7 +37,8 @@ interface MaterialObject {
 const Materiais: React.FC<MateriaisProps> = ({ materia }) => {
   const [loading, setLoading] = useState(true);
   const [materiaisDeAula, setMateriaisDeAula] = useState([]);
-  const { token, signOut } = useAuth();
+  const { token, renew, student } = useAuth();
+  const { matricula } = student;
   const { colors } = useContext(ThemeContext);
 
   const getDownloads = useCallback(() => {
@@ -61,12 +62,12 @@ const Materiais: React.FC<MateriaisProps> = ({ materia }) => {
         .catch(err => {
           setLoading(false);
           if (err.response.status === 401) {
-            signOut();
+            renew(matricula);
           }
         });
     }
     requestDownloads();
-  }, [materia, token, signOut]);
+  }, [materia, token, renew, matricula]);
 
   useEffect(() => {
     getDownloads();
@@ -112,7 +113,6 @@ const Materiais: React.FC<MateriaisProps> = ({ materia }) => {
       ) : (
         <ListContainer>
           {materiaisDeAula.map((obj: MaterialObject) => {
-            console.log();
             const arrayData = obj.data_vinculacao.split('-');
             const data = ` ${arrayData[2]}/${arrayData[1]}/${arrayData[0]}`;
             return (

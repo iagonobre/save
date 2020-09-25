@@ -22,6 +22,7 @@ interface Student {
   situacao: string;
   curso: string;
   turma: string;
+  admin: boolean;
 }
 
 interface AuthState {
@@ -38,6 +39,7 @@ interface AuthContextData {
   student: Student;
   token: string;
   loading: boolean;
+  renew(matricula: string): Promise<void>;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
   updateUser(student: Student): void;
@@ -77,6 +79,25 @@ export const AuthProvider: React.FC = ({ children }) => {
 
     await AsyncStorage.multiSet([
       ['@Save:token', token],
+      ['@Save:password', password],
+      ['@Save:student', JSON.stringify(student)],
+    ]);
+
+    setData({ token, student });
+  }, []);
+
+  const renew = useCallback(async ({ matricula }) => {
+    const password = await AsyncStorage.getItem('@Save:password');
+
+    const response = await api.post('/students', {
+      matricula,
+      password,
+    });
+
+    const { token, student } = response.data;
+
+    await AsyncStorage.multiSet([
+      ['@Save:token', token],
       ['@Save:student', JSON.stringify(student)],
     ]);
 
@@ -84,7 +105,11 @@ export const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const signOut = useCallback(async () => {
-    await AsyncStorage.multiRemove(['@Save:token', '@Save:student']);
+    await AsyncStorage.multiRemove([
+      '@Save:token',
+      '@Save:student',
+      '@Save:password',
+    ]);
 
     setData({} as AuthState);
   }, []);
@@ -105,6 +130,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         student: data.student,
         token: data.token,
         signIn,
+        renew,
         signOut,
         loading,
         updateUser,

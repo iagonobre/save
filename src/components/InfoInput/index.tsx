@@ -22,7 +22,7 @@ const InfoInput: React.FC<InfoInputProps> = ({
 }) => {
   const inputElementRef = useRef<any>(null);
 
-  const { registerField, defaultValue = '', fieldName } = useField(name);
+  const { registerField, defaultValue = null, fieldName } = useField(name);
   const inputValueRef = useRef<InputValueReference>({ value: defaultValue });
 
   useEffect(() => {

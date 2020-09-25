@@ -106,6 +106,23 @@ export const avatarUpdatedSuccess: Function = () => {
   });
 };
 
+export const notifySuccess: Function = () => {
+  showMessage({
+    message: 'Enviado com sucesso',
+    description: 'Notificação enviada com sucesso!',
+    type: 'success',
+    animationDuration: 1000,
+    backgroundColor: '#00AE91',
+    titleStyle: {
+      fontFamily: 'Archivo_700Bold',
+    },
+    textStyle: {
+      fontFamily: 'Archivo_400Regular',
+    },
+    icon: 'success',
+  });
+};
+
 export const loginError: Function = () => {
   showMessage({
     message: 'Erro ao acessar',

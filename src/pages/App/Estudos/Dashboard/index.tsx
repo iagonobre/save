@@ -53,7 +53,8 @@ const Dashboard: React.FC = () => {
   const { goBack } = useNavigation();
   const { period } = route.params as RouteParams;
 
-  const { token, signOut } = useAuth();
+  const { token, renew, student } = useAuth();
+  const { matricula } = student;
 
   const [page, setPage] = useState('Materiais');
   const [loading, setLoading] = useState(true);
@@ -119,14 +120,14 @@ const Dashboard: React.FC = () => {
             goBack();
           }
           if (err.response.status === 401) {
-            signOut();
+            renew(matricula);
           } else {
             errorGeneric(err.response.data.message);
           }
         });
     }
     requestSubjects();
-  }, [period, signOut, token, goBack]);
+  }, [period, renew, matricula, token, goBack]);
 
   useEffect(() => {
     getSubjects();

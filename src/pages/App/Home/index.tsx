@@ -1,5 +1,8 @@
 import React, { useEffect, useContext, useState, useCallback } from 'react';
 import { differenceInDays } from 'date-fns';
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
+import Constants from 'expo-constants';
 
 import { Share } from 'react-native';
 import { Feather } from '@expo/vector-icons';
@@ -45,7 +48,7 @@ const Home: React.FC = () => {
   const { theme } = useTheme();
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(true);
-  const { token, updateUser, signOut, student } = useAuth();
+  const { token, updateUser, signOut, student, renew } = useAuth();
   const { darkReward, activeDarkReward } = useReward();
   const { navigate } = useNavigation();
   const { avatarSuap, avatarSaveURL, nomeUsual, matricula } = student;
@@ -65,6 +68,34 @@ const Home: React.FC = () => {
     }
   }, [activeDarkReward, darkReward, navigate]);
 
+  const registerForPushNotificationsAsync = useCallback(async () => {
+    if (Constants.isDevice) {
+      const { status: existingStatus } = await Permissions.getAsync(
+        Permissions.NOTIFICATIONS,
+      );
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Permissions.askAsync(
+          Permissions.NOTIFICATIONS,
+        );
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        return;
+      }
+      const pushtoken = await Notifications.getExpoPushTokenAsync();
+      api.post(
+        '/notifications',
+        {
+          pushtoken: pushtoken.data,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+    }
+  }, [token]);
+
   const handleGetProgress = useCallback(() => {
     const progressDays = differenceInDays(
       new Date(2021, 4, 13, 0, 0),
@@ -83,6 +114,7 @@ const Home: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    registerForPushNotificationsAsync();
     handleGetProgress();
     async function updateStudent(token: string) {
       setLoading(true);
@@ -97,14 +129,21 @@ const Home: React.FC = () => {
         .catch(err => {
           setLoading(false);
           if (err.response.status === 401) {
-            signOut();
+            renew(matricula);
           } else {
             errorGeneric(err.response.data.message);
           }
         });
     }
     updateStudent(token);
-  }, [token, updateUser, signOut, handleGetProgress]);
+  }, [
+    token,
+    updateUser,
+    renew,
+    matricula,
+    handleGetProgress,
+    registerForPushNotificationsAsync,
+  ]);
 
   return (
     <Container>
