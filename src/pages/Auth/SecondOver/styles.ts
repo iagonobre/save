@@ -40,7 +40,6 @@ export const Footer = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  margin-top: 28px;
 `;
 
 export const Details = styled.View`

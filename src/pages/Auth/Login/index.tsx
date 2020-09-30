@@ -5,6 +5,7 @@ import {
   ScrollView,
   Platform,
   TextInput,
+  Linking,
 } from 'react-native';
 
 import * as Yup from 'yup';
@@ -20,7 +21,7 @@ import Button from '../../../components/Button';
 import Input from '../../../components/Input';
 
 import logoImg from '../../../assets/images/logo.png';
-import { Container } from './styles';
+import { Container, Policy } from './styles';
 
 interface SignInFormData {
   matricula: string;
@@ -117,6 +118,11 @@ const Login: React.FC = () => {
             >
               Acessar
             </Button>
+            <Policy
+              onPress={() => Linking.openURL('https://moralesave.me/faq')}
+            >
+              POLÍTICA DE PRIVACIDADE
+            </Policy>
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>

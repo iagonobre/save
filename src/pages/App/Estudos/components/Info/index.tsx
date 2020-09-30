@@ -63,6 +63,9 @@ const Info: React.FC<InfoProps> = ({ materia }) => {
       return 'Nenhum local encontrado.';
     }
     return locaisDeAula.map((locais: string) => {
+      if (locais.length > 43) {
+        return `${locais.substring(0, 43)}...${'\n'}`;
+      }
       return `${locais}${'\n'}`;
     });
   }, [locaisDeAula]);
@@ -174,7 +177,7 @@ const Info: React.FC<InfoProps> = ({ materia }) => {
               </DashboardBox>
             );
           })}
-          <DashboardBox height={118} header="Disciplina">
+          <DashboardBox height={160} header="Disciplina">
             <ContentBox>
               <ProfText>Componente Curricular:</ProfText>
               <ContentText numberOfLines={2}>

@@ -56,12 +56,3 @@ export const ButtonText = styled.Text`
   color: #fff;
   font-size: 20px;
 `;
-
-export const TotalConnections = styled.Text`
-  font-family: 'Poppins_400Regular';
-  color: ${props => props.theme.colors.textComplement};
-  font-size: 12px;
-  line-height: 20px;
-  max-width: 140px;
-  margin-top: 20px;
-`;

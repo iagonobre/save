@@ -11,7 +11,6 @@ import {
   Button,
   ButtonSecondary,
   ButtonText,
-  TotalConnections,
 } from './styles';
 
 import landingImage from '../../../assets/images/landing-background.png';
@@ -46,7 +45,7 @@ const Landing: React.FC = () => {
           <Button onPress={handleNavigateToFaq}>
             <Image source={faqIcon} />
 
-            <ButtonText>FAQ</ButtonText>
+            <ButtonText>Políticas</ButtonText>
           </Button>
           <ButtonSecondary onPress={handleNavigateToLoginPage}>
             <Image source={studyIcon} />
@@ -54,9 +53,6 @@ const Landing: React.FC = () => {
             <ButtonText>Acessar</ButtonText>
           </ButtonSecondary>
         </ButtonsContainer>
-        <TotalConnections>
-          Feito por: Genp {'\n'}IFRN Parnamirim
-        </TotalConnections>
       </ActionContainer>
     </>
   );

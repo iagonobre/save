@@ -86,24 +86,6 @@ export const AuthProvider: React.FC = ({ children }) => {
     setData({ token, student });
   }, []);
 
-  const renew = useCallback(async ({ matricula }) => {
-    const password = await AsyncStorage.getItem('@Save:password');
-
-    const response = await api.post('/students', {
-      matricula,
-      password,
-    });
-
-    const { token, student } = response.data;
-
-    await AsyncStorage.multiSet([
-      ['@Save:token', token],
-      ['@Save:student', JSON.stringify(student)],
-    ]);
-
-    setData({ token, student });
-  }, []);
-
   const signOut = useCallback(async () => {
     await AsyncStorage.multiRemove([
       '@Save:token',
@@ -113,6 +95,31 @@ export const AuthProvider: React.FC = ({ children }) => {
 
     setData({} as AuthState);
   }, []);
+
+  const renew = useCallback(
+    async (matricula: string) => {
+      const password = await AsyncStorage.getItem('@Save:password');
+
+      try {
+        const response = await api.post('/students', {
+          matricula,
+          password,
+        });
+
+        const { token, student } = response.data;
+
+        await AsyncStorage.multiSet([
+          ['@Save:token', token],
+          ['@Save:student', JSON.stringify(student)],
+        ]);
+
+        setData({ token, student });
+      } catch (err) {
+        signOut();
+      }
+    },
+    [signOut],
+  );
 
   const updateUser = useCallback(
     (student: Student) => {

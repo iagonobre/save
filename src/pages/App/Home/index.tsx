@@ -48,7 +48,7 @@ const Home: React.FC = () => {
   const { theme } = useTheme();
   const [progress, setProgress] = useState(0);
   const [loading, setLoading] = useState(true);
-  const { token, updateUser, signOut, student, renew } = useAuth();
+  const { token, updateUser, student, renew } = useAuth();
   const { darkReward, activeDarkReward } = useReward();
   const { navigate } = useNavigation();
   const { avatarSuap, avatarSaveURL, nomeUsual, matricula } = student;
@@ -58,7 +58,7 @@ const Home: React.FC = () => {
     navigate('Perfil');
   }, [navigate]);
 
-  const handleShareApp = useCallback(() => {
+  const handleShareApp = useCallback(async () => {
     Share.share({
       message: `Olá, aluno do IFRN! Já imaginou ter o SUAP simples e descomplicado em suas mãos? Conheça o Save, o Assistente Virtual que decola seus estudos! Consultar o SUAP nunca foi tão fácil. Não deixe de conferir!${'\n'}${'\n'}GooglePlay: https://bit.ly/3cbZjyl${'\n'}AppStore: Em Breve.`,
     });

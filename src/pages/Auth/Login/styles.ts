@@ -8,3 +8,9 @@ export const Container = styled.View`
   align-items: center;
   padding: 0px 40px ${Platform.OS === 'android' ? 65 : 40}px 40px;
 `;
+
+export const Policy = styled.Text`
+  font-family: 'Poppins_400Regular';
+  color: ${props => props.theme.colors.secondary};
+  font-size: 12px;
+`;

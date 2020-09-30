@@ -43,7 +43,7 @@ export const infosSkeletonStyle = [
   {
     key: 'info2',
     width: '100%',
-    height: 146,
+    height: 190,
     borderRadius: 8,
     marginTop: 18,
     marginBottom: 18,

@@ -11,7 +11,6 @@ import {
   Button,
   ButtonSecondary,
   ButtonText,
-  TotalConnections,
 } from './styles';
 
 import faqImage from '../../../assets/images/faqimage.png';
@@ -38,9 +37,9 @@ const Faq: React.FC = () => {
 
       <ActionContainer>
         <Title>
-          Para acessar o nosso FAQ
+          Política de privacidade
           {'\n'}
-          <TitleBold>Visite o nosso site:</TitleBold>
+          <TitleBold>Acesse o nosso site:</TitleBold>
         </Title>
 
         <ButtonsContainer>
@@ -54,9 +53,6 @@ const Faq: React.FC = () => {
             <ButtonText>Voltar</ButtonText>
           </ButtonSecondary>
         </ButtonsContainer>
-        <TotalConnections>
-          Feito por: Genp {'\n'}IFRN Parnamirim
-        </TotalConnections>
       </ActionContainer>
     </>
   );

@@ -74,6 +74,7 @@ export const EmailButton = styled(RectButton)`
 export const ContentBox = styled.View`
   text-align: left;
   padding: 18px;
+  max-height: 200px;
   justify-content: center;
 `;
 
