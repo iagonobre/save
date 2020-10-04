@@ -58,9 +58,9 @@ const Home: React.FC = () => {
     navigate('Perfil');
   }, [navigate]);
 
-  const handleShareApp = useCallback(async () => {
+  const handleShareApp = useCallback(() => {
     Share.share({
-      message: `Olá, aluno do IFRN! Já imaginou ter o SUAP simples e descomplicado em suas mãos? Conheça o Save, o Assistente Virtual que decola seus estudos! Consultar o SUAP nunca foi tão fácil. Não deixe de conferir!${'\n'}${'\n'}GooglePlay: https://bit.ly/3cbZjyl${'\n'}AppStore: Em Breve.`,
+      message: `Olá, aluno do IFRN! Já imaginou ter o SUAP simples e descomplicado em suas mãos? Conheça o Save, o Assistente Virtual que decola seus estudos! Consultar o SUAP nunca foi tão fácil. Não deixe de conferir!${'\n'}${'\n'}GooglePlay: https://bit.ly/save_android${'\n'}AppStore: Em Breve.`,
     });
     if (!darkReward) {
       activeDarkReward();

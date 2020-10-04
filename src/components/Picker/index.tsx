@@ -54,7 +54,21 @@ const Picker: React.FC<PickerProps> = ({
             marginHorizontal: 18,
             justifyContent: 'center',
           },
+          inputIOSContainer: {
+            height: 40,
+            backgroundColor: colors.boxFooter,
+            borderWidth: 1,
+            borderColor: `${pickerError ? colors.warnColor : colors.lineWhite}`,
+            borderRadius: 8,
+            paddingHorizontal: 18,
+            marginVertical: 4,
+            marginHorizontal: 18,
+            justifyContent: 'center',
+          },
           inputAndroid: {
+            color: `${pickerError ? colors.warnColor : colors.textBase}`,
+          },
+          inputIOS: {
             color: `${pickerError ? colors.warnColor : colors.textBase}`,
           },
           iconContainer: {

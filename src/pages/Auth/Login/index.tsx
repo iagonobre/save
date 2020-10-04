@@ -41,18 +41,23 @@ const Login: React.FC = () => {
         setLoading(true);
         formRef.current?.setErrors({});
 
+        const dataFormatted = {
+          matricula: data.matricula.trim(),
+          password: data.password,
+        };
+
         const schema = Yup.object().shape({
           matricula: Yup.string().required('Matricula obrigatória'),
           password: Yup.string().required('Senha obrigatória'),
         });
 
-        await schema.validate(data, {
+        await schema.validate(dataFormatted, {
           abortEarly: false,
         });
 
         await signIn({
-          matricula: data.matricula,
-          password: data.password,
+          matricula: dataFormatted.matricula,
+          password: dataFormatted.password,
         });
         setLoading(false);
       } catch (err) {
