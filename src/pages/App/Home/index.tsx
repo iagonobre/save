@@ -271,7 +271,7 @@ const Home: React.FC = () => {
         {loading ? (
           <Name style={{ marginTop: '50%' }}>Carregando...</Name>
         ) : (
-          <Rocket source={rocketImage} resizeMode="contain" />
+          <Rocket source={rocketImage} style={{ resizeMode: 'contain' }} />
         )}
         {loading ? undefined : (
           <ProgressContainer>

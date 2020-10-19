@@ -1,5 +1,14 @@
 import styled from 'styled-components/native';
 
+export const Modal = styled.View`
+  flex: 1;
+  height: 190px;
+  margin: 0px 18px 0px 18px;
+  padding-bottom: 18px;
+  justify-content: center;
+  align-items: center;
+`;
+
 export const Container = styled.ScrollView`
   flex: 1;
   background-color: ${props => props.theme.colors.background};

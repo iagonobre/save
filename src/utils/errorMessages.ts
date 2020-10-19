@@ -72,10 +72,44 @@ export const updatedError: Function = () => {
   });
 };
 
+export const requiredPermission: Function = () => {
+  showMessage({
+    message: 'Permissão necessária',
+    description: 'Conceda a permissão para realizar esta tarefa.',
+    type: 'danger',
+    animationDuration: 1000,
+    backgroundColor: '#E33D3D',
+    titleStyle: {
+      fontFamily: 'Archivo_700Bold',
+    },
+    textStyle: {
+      fontFamily: 'Archivo_400Regular',
+    },
+    icon: 'danger',
+  });
+};
+
 export const avatarUpdatedError: Function = () => {
   showMessage({
-    message: 'Erro ao Atualizar',
+    message: 'Erro ao atualizar',
     description: 'Erro ao atualizar avatar, tente novamente.',
+    type: 'danger',
+    animationDuration: 1000,
+    backgroundColor: '#E33D3D',
+    titleStyle: {
+      fontFamily: 'Archivo_700Bold',
+    },
+    textStyle: {
+      fontFamily: 'Archivo_400Regular',
+    },
+    icon: 'danger',
+  });
+};
+
+export const avatarDeleteError: Function = () => {
+  showMessage({
+    message: 'Erro ao deletar.',
+    description: 'Foto de perfil inexistente.',
     type: 'danger',
     animationDuration: 1000,
     backgroundColor: '#E33D3D',
@@ -93,6 +127,23 @@ export const avatarUpdatedSuccess: Function = () => {
   showMessage({
     message: 'Atualizado com sucesso',
     description: 'Foto atualizada com sucesso!',
+    type: 'success',
+    animationDuration: 1000,
+    backgroundColor: '#00AE91',
+    titleStyle: {
+      fontFamily: 'Archivo_700Bold',
+    },
+    textStyle: {
+      fontFamily: 'Archivo_400Regular',
+    },
+    icon: 'success',
+  });
+};
+
+export const avatarDeleteSuccess: Function = () => {
+  showMessage({
+    message: 'Removido com sucesso',
+    description: 'Seu perfil voltará a ter a foto do SUAP.',
     type: 'success',
     animationDuration: 1000,
     backgroundColor: '#00AE91',

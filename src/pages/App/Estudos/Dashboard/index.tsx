@@ -86,7 +86,7 @@ const Dashboard: React.FC = () => {
 
   const getSubjects = useCallback(() => {
     setLoading(true);
-    async function requestSubjects() {
+    async function requestSubjects(): Promise<void> {
       await suapApi
         .get(
           `https://suap.ifrn.edu.br/api/v2/minhas-informacoes/turmas-virtuais/${period}`,

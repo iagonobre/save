@@ -78,23 +78,9 @@ const Admin: React.FC = () => {
           <Notification>
             <Text>Enviar Notificação</Text>
             <Form ref={formRef} onSubmit={handleSendNotification}>
+              <InfoInput keyboardType="default" title="TITULO" name="title" />
+              <InfoInput keyboardType="default" title="CORPO" name="body" />
               <InfoInput
-                autoCorrect={false}
-                autoCapitalize="none"
-                keyboardType="default"
-                title="TITULO"
-                name="title"
-              />
-              <InfoInput
-                autoCorrect={false}
-                autoCapitalize="none"
-                keyboardType="default"
-                title="CORPO"
-                name="body"
-              />
-              <InfoInput
-                autoCorrect={false}
-                autoCapitalize="none"
                 keyboardType="default"
                 title="CAMPUS (opcional)"
                 name="campus"
@@ -107,8 +93,6 @@ const Admin: React.FC = () => {
                 name="turma"
               />
               <InfoInput
-                autoCorrect={false}
-                autoCapitalize="none"
                 keyboardType="default"
                 title="MATRICULA (opcional)"
                 name="matricula"
