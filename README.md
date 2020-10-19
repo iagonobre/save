@@ -1,25 +1,39 @@
-# SAVE - Sistema de Assitência Virtual Estudantil
+<h1 align="center">
+    <img alt="Save" title="Save" src=".github/logopng" />
+</h1>
 
-> O Save é um app de gerenciamento de estudos, feito para alunos do Instituto Federal do Rio Grande do Norte. Criado com React Native e Expo.
-<div align='center'>
-<img src="src/assets/gitimages/Banner.png" alt="Save">
-</div>
+<p align="center">
+  <a href="#-tecnologias">Tecnologias</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-projeto">Projeto</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#memo-licença">Licença</a>
+</p>
 
-</br>
-</br>
-</br>
-<img src="src/assets/gitimages/Celular.png" align="right"
-     alt="Size Limit logo by Anton Lovchikov" width="230">
+<br>
 
-</br>
-</br>
-</br>
-</br>
+<p align="center">
+  <img alt="Save" src=".github/apresentation.png" width="100%">
+</p>
 
-## Funcionalidades:
+## 🚀 Tecnologias
 
-* Confira seus dados escolares
-* Obtenha materiais de aula
-* Veja suas notas e informações
-* Altere sua foto de perfil
-* Intuitivo e descomplicado
+Esse projeto foi desenvolvido com as tecnologias:
+
+- [Node.js](https://nodejs.org/en/)
+- [React](https://reactjs.org)
+- [React Native](https://facebook.github.io/react-native/)
+- [Expo](https://expo.io/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [StyledComponents](https://styled-components.com/)
+
+## 💻 Projeto
+
+O Save é um app de gerenciamento de estudos, feito para alunos do Instituto Federal do Rio Grande do Norte.
+
+## :memo: Licença
+
+Esse projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE.md) para mais detalhes.
+
+---
+
+Feito por Iago Nobre :)
+iagonobre22@gmail.com
