@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img alt="Save" title="Save" src=".github/logopng" />
+    <img alt="Save" title="Save" src=".github/logo.png" />
 </h1>
 
 <p align="center">
@@ -11,7 +11,7 @@
 <br>
 
 <p align="center">
-  <img alt="Save" src=".github/apresentation.png" width="100%">
+  <img alt="Save" src=".github/apresentation.png" width="60%">
 </p>
 
 ## 🚀 Tecnologias
