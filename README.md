@@ -5,6 +5,7 @@
 <p align="center">
   <a href="#-tecnologias">Tecnologias</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#-projeto">Projeto</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-repos">Repos</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#memo-licença">Licença</a>
 </p>
 
@@ -29,11 +30,17 @@ Esse projeto foi desenvolvido com as tecnologias:
 
 O Save é um app de gerenciamento de estudos, feito para alunos do Instituto Federal do Rio Grande do Norte.
 
+## 📁 Repos
+
+- [Aplicativo (mobile)](https://github.com/IagoNobre/save) 
+- [Site (web)](https://github.com/IagoNobre/save-web)
+- [Backend (api)](https://github.com/IagoNobre/save-api)
+
 ## :memo: Licença
 
 Esse projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
 ---
 
-Feito por Iago Nobre :)
+Feito por Iago Nobre :) </br>
 iagonobre22@gmail.com
