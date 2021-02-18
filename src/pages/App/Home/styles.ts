@@ -6,6 +6,13 @@ export const Container = styled.ScrollView`
   background-color: ${props => props.theme.colors.backgroundPurple};
 `;
 
+export const Modal = styled.View`
+  height: 190px;
+  justify-content: center;
+  align-items: center;
+  padding: 48px;
+`;
+
 export const ContentContainer = styled.View`
   flex: 1;
   align-items: center;

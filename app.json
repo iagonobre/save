@@ -2,7 +2,7 @@
   "expo": {
     "name": "SAVE",
     "slug": "Save",
-    "version": "1.1.5",
+    "version": "1.1.7",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -24,10 +24,16 @@
       "color": "#6b3b8b"
     },
     "android": {
+      "permissions": [
+        "CAMERA",
+        "CAMERA_ROLL",
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE"
+      ],
       "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true,
       "package": "com.save.genp",
-      "versionCode": 16,
+      "versionCode": 18,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#6B3B8B"

@@ -8,6 +8,7 @@ interface InfoInputProps extends TextInputProps {
   name: string;
   title?: string;
   error?: boolean;
+  isErrored?: boolean;
 }
 
 interface InputValueReference {

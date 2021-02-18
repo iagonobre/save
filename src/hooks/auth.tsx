@@ -6,7 +6,7 @@ import React, {
   useContext,
 } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
-import { api } from '../services/api';
+import { api, suapApi } from '../services/api';
 
 interface Student {
   matricula: string;
@@ -26,8 +26,8 @@ interface Student {
 }
 
 interface AuthState {
-  token: string;
   student: Student;
+  token: string;
 }
 
 interface SignInCredentials {
@@ -39,10 +39,12 @@ interface AuthContextData {
   student: Student;
   token: string;
   loading: boolean;
-  renew(matricula: string): Promise<void>;
+  periodKey: string;
+  renew(): Promise<void>;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
-  updateUser(student: Student): void;
+  setPeriodKey(period: string): void;
+  updateUser(student: Student, token: string): void;
 }
 
 export const AuthContext = createContext<AuthContextData>(
@@ -51,17 +53,23 @@ export const AuthContext = createContext<AuthContextData>(
 
 export const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<AuthState>({} as AuthState);
+  const [periodKey, setStatePeriodKey] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadStorageData(): Promise<void> {
-      const [token, student] = await AsyncStorage.multiGet([
+      const [token, student, period] = await AsyncStorage.multiGet([
         '@Save:token',
         '@Save:student',
+        '@Save:period',
       ]);
 
       if (token[1] && student[1]) {
         setData({ token: token[1], student: JSON.parse(student[1]) });
+      }
+
+      if (period[1]) {
+        setStatePeriodKey(JSON.parse(period[1]));
       }
 
       setLoading(false);
@@ -70,12 +78,18 @@ export const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const signIn = useCallback(async ({ matricula, password }) => {
-    const response = await api.post('/students', {
-      matricula,
+    const response = await suapApi.post('/autenticacao/token/', {
+      username: matricula,
       password,
     });
 
-    const { token, student } = response.data;
+    const { token } = response.data;
+
+    const getStudent = await api.get('/students/', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const student = getStudent.data;
 
     await AsyncStorage.multiSet([
       ['@Save:token', token],
@@ -83,7 +97,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       ['@Save:student', JSON.stringify(student)],
     ]);
 
-    setData({ token, student });
+    setData({ student, token });
   }, []);
 
   const signOut = useCallback(async () => {
@@ -96,39 +110,45 @@ export const AuthProvider: React.FC = ({ children }) => {
     setData({} as AuthState);
   }, []);
 
-  const renew = useCallback(
-    async (matricula: string) => {
-      const password = await AsyncStorage.getItem('@Save:password');
+  const setPeriodKey = useCallback(async (period: string) => {
+    await AsyncStorage.setItem('@Save:period', JSON.stringify(period));
+  }, []);
 
-      try {
-        const response = await api.post('/students', {
-          matricula,
-          password,
-        });
+  const renew = useCallback(async () => {
+    const oldToken = await AsyncStorage.getItem('@Save:token');
 
-        const { token, student } = response.data;
+    try {
+      const renewToken = await suapApi.post('/autenticacao/token/refresh/', {
+        token: oldToken,
+      });
 
-        await AsyncStorage.multiSet([
-          ['@Save:token', token],
-          ['@Save:student', JSON.stringify(student)],
-        ]);
+      const { token } = renewToken.data;
 
-        setData({ token, student });
-      } catch (err) {
-        signOut();
-      }
-    },
-    [signOut],
-  );
+      const getStudent = await api.get('/students/', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const { student } = getStudent.data;
+
+      await AsyncStorage.multiSet([
+        ['@Save:token', token],
+        ['@Save:student', JSON.stringify(student)],
+      ]);
+
+      setData({ token, student });
+    } catch (err) {
+      signOut();
+    }
+  }, [signOut]);
 
   const updateUser = useCallback(
-    (student: Student) => {
+    (student: Student, token) => {
       setData({
-        token: data.token,
         student,
+        token,
       });
     },
-    [setData, data.token],
+    [setData],
   );
 
   return (
@@ -137,6 +157,8 @@ export const AuthProvider: React.FC = ({ children }) => {
         student: data.student,
         token: data.token,
         signIn,
+        setPeriodKey,
+        periodKey,
         renew,
         signOut,
         loading,

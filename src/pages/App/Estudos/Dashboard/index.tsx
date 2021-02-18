@@ -53,8 +53,7 @@ const Dashboard: React.FC = () => {
   const { goBack } = useNavigation();
   const { period } = route.params as RouteParams;
 
-  const { token, renew, student } = useAuth();
-  const { matricula } = student;
+  const { token, renew, setPeriodKey } = useAuth();
 
   const [page, setPage] = useState('Materiais');
   const [loading, setLoading] = useState(true);
@@ -120,18 +119,19 @@ const Dashboard: React.FC = () => {
             goBack();
           }
           if (err.response.status === 401) {
-            renew(matricula);
+            renew();
           } else {
             errorGeneric(err.response.data.message);
           }
         });
     }
     requestSubjects();
-  }, [period, renew, matricula, token, goBack]);
+  }, [period, renew, token, goBack]);
 
   useEffect(() => {
     getSubjects();
-  }, [getSubjects]);
+    setPeriodKey(period);
+  }, [getSubjects, period, setPeriodKey]);
 
   return (
     <>

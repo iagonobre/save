@@ -1,3 +1,4 @@
+import { RectButton } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
 export const Modal = styled.View`
@@ -88,4 +89,8 @@ export const Footer = styled.View`
   background-color: ${props => props.theme.colors.boxFooter};
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
+`;
+
+export const Press = styled(RectButton)`
+  width: 100%;
 `;

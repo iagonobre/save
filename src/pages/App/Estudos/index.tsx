@@ -37,8 +37,7 @@ interface PeriodObject {
 
 const Estudos: React.FC = () => {
   const { colors } = useContext(ThemeContext);
-  const { token, signOut, renew, student } = useAuth();
-  const { matricula } = student;
+  const { token, renew, periodKey } = useAuth();
   const [periods, setPeriods] = useState([]);
   const [itemKey, setItemKey] = useState('');
   const [loading, setLoading] = useState(true);
@@ -68,22 +67,28 @@ const Estudos: React.FC = () => {
             },
           );
 
-          const { key } = data[data.length - 1];
-          setItemKey(key);
-          setValue(key);
+          if (!periodKey) {
+            const { key } = data[data.length - 1];
+            setItemKey(key);
+            setValue(key);
+          }
+          if (periodKey) {
+            setItemKey(periodKey as string);
+            setValue(periodKey as string);
+          }
           setPeriods(data);
           setLoading(false);
         })
         .catch(err => {
           if (err.response.status === 401) {
-            renew(matricula);
+            renew();
           } else {
             errorGeneric(err.response.data.message);
           }
         });
     }
     getPeriods();
-  }, [token, renew, matricula]);
+  }, [token, renew, periodKey]);
 
   useEffect(() => {
     getClasses();

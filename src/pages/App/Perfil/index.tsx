@@ -27,6 +27,7 @@ import { useReward } from '../../../hooks/rewards';
 import { useTheme } from '../../../hooks/theme';
 
 import {
+  Press,
   Modal,
   Container,
   Avatar,
@@ -109,7 +110,7 @@ const Perfil: React.FC = () => {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(response => {
-        updateUser(response.data);
+        updateUser(response.data, token);
         avatarUpdatedSuccess();
       })
       .catch(err => {
@@ -124,7 +125,7 @@ const Perfil: React.FC = () => {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(response => {
-        updateUser(response.data);
+        updateUser(response.data, token);
         avatarDeleteSuccess();
       })
       .catch(err => {
@@ -213,15 +214,19 @@ const Perfil: React.FC = () => {
                 editable={false}
               />
             ) : (
-              <InfoInput
-                defaultValue={email}
-                placeholder="Atualize seu perfil"
-                placeholderTextColor="#E33D3D"
-                title="EMAIL"
-                name="emailPessoal"
-                editable={false}
-                error
-              />
+              <Press onPress={handleNavigateToUpdate}>
+                <Picker
+                  pickerError
+                  disabled
+                  titleInfo="EMAIL"
+                  placeholderLabel="Atualize seu perfil"
+                  value={student.turma}
+                  items={classes}
+                  onValueChange={() => {
+                    return undefined;
+                  }}
+                />
+              </Press>
             )}
           </Form>
           {campus === 'PAR' ? (
@@ -237,17 +242,19 @@ const Perfil: React.FC = () => {
                 }}
               />
             ) : (
-              <Picker
-                pickerError
-                disabled
-                titleInfo="TURMA"
-                placeholderLabel="Atualize seu perfil"
-                value={student.turma}
-                items={classes}
-                onValueChange={() => {
-                  return undefined;
-                }}
-              />
+              <Press onPress={handleNavigateToUpdate} style={{ marginTop: 14 }}>
+                <Picker
+                  pickerError
+                  disabled
+                  titleInfo="TURMA"
+                  placeholderLabel="Atualize seu perfil"
+                  value={student.turma}
+                  items={classes}
+                  onValueChange={() => {
+                    return undefined;
+                  }}
+                />
+              </Press>
             )
           ) : undefined}
           {darkReward && (

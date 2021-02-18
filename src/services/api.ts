@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const api = axios.create({
-  baseURL: 'http://134.209.46.170',
+  baseURL: 'https://save.oulu.ifrn.edu.br',
 });
 
 export const suapApi = axios.create({

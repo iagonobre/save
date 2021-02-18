@@ -59,7 +59,7 @@ const UpdateProfile: React.FC = () => {
         });
 
         const response = await api.put(
-          'students/profile',
+          '/students/profile',
           {
             email: emailPessoal,
             turma: selectedClass,
@@ -70,7 +70,7 @@ const UpdateProfile: React.FC = () => {
         );
 
         updatedSuccess();
-        updateUser(response.data);
+        updateUser(response.data, token);
         navigate('Perfil');
       } catch (err) {
         if (err instanceof Yup.ValidationError) {

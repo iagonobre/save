@@ -1,8 +1,15 @@
-import React, { useEffect, useContext, useState, useCallback } from 'react';
+import React, {
+  useEffect,
+  useContext,
+  useState,
+  useCallback,
+  useRef,
+} from 'react';
 import { differenceInDays } from 'date-fns';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
+import { checkVersion } from 'react-native-check-version';
 
 import { Share } from 'react-native';
 import { Feather } from '@expo/vector-icons';
@@ -10,6 +17,7 @@ import * as Progress from 'react-native-progress';
 import { useNavigation } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components';
 import SkeletonContent from 'react-native-skeleton-content';
+import { Modalize } from 'react-native-modalize';
 import Header from '../../../components/Header';
 
 import { useTheme } from '../../../hooks/theme';
@@ -33,6 +41,7 @@ import {
   ProgressContainer,
   Text,
   Rocket,
+  Modal,
   ContentContainer,
 } from './styles';
 
@@ -53,6 +62,7 @@ const Home: React.FC = () => {
   const { navigate } = useNavigation();
   const { avatarSuap, avatarSaveURL, nomeUsual, matricula } = student;
   const avatarSuapURL = `https://suap.ifrn.edu.br${avatarSuap}`;
+  const modalizeRef = useRef<Modalize>(null);
 
   const handleNavigateToPerfil = useCallback(() => {
     navigate('Perfil');
@@ -113,23 +123,34 @@ const Home: React.FC = () => {
     return setProgress(progressDecimal);
   }, []);
 
+  const handleCheckVersion = useCallback(async () => {
+    const version = await checkVersion({
+      bundleId: 'com.save.genp',
+    });
+
+    if (version.needsUpdate) {
+      modalizeRef.current?.open();
+    }
+  }, []);
+
   useEffect(() => {
     registerForPushNotificationsAsync();
     handleGetProgress();
+    handleCheckVersion();
     async function updateStudent(token: string) {
       setLoading(true);
       await api
-        .get('/students/profile', {
+        .get('/students/', {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then(response => {
-          updateUser(response.data);
+          updateUser(response.data.student, token);
           setLoading(false);
         })
         .catch(err => {
           setLoading(false);
           if (err.response.status === 401) {
-            renew(matricula);
+            renew();
           } else {
             errorGeneric(err.response.data.message);
           }
@@ -143,146 +164,170 @@ const Home: React.FC = () => {
     matricula,
     handleGetProgress,
     registerForPushNotificationsAsync,
+    handleCheckVersion,
   ]);
-
   return (
-    <Container>
-      <Header title center page="Home" />
-      <InfoHeader>
-        {loading ? (
-          <SkeletonContent
-            boneColor={
-              theme.title === 'light' ? colors.primary : colors.background
-            }
-            highlightColor={
-              theme.title === 'light' ? colors.primaryLight : colors.background
-            }
-            containerStyle={{ flex: 1 }}
-            isLoading
-            layout={[
-              {
-                key: 'button',
-                width: 41,
-                height: 41,
-                borderRadius: 8,
-              },
-            ]}
-          />
-        ) : (
-          <ShareButton onPress={handleShareApp}>
-            <Feather name="share-2" size={28} color={colors.backgroundPurple} />
-          </ShareButton>
-        )}
+    <>
+      <Modalize
+        adjustToContentHeight
+        ref={modalizeRef}
+        snapPoint={190}
+        handleStyle={{ backgroundColor: colors.boxFooter }}
+        modalStyle={{ backgroundColor: colors.background }}
+      >
+        <Modal>
+          <Name style={{ textAlign: 'center' }}>
+            Uma atualização é necessária!
+          </Name>
+          <Matricula style={{ marginTop: 8, textAlign: 'center' }}>
+            Algumas funcionalidades podem não funcionar como deveriam.
+          </Matricula>
+        </Modal>
+      </Modalize>
+      <Container>
+        <Header title center page="Home" />
+        <InfoHeader>
+          {loading ? (
+            <SkeletonContent
+              boneColor={
+                theme.title === 'light' ? colors.primary : colors.background
+              }
+              highlightColor={
+                theme.title === 'light'
+                  ? colors.primaryLight
+                  : colors.background
+              }
+              containerStyle={{ flex: 1 }}
+              isLoading
+              layout={[
+                {
+                  key: 'button',
+                  width: 41,
+                  height: 41,
+                  borderRadius: 8,
+                },
+              ]}
+            />
+          ) : (
+            <ShareButton onPress={handleShareApp}>
+              <Feather
+                name="share-2"
+                size={28}
+                color={colors.backgroundPurple}
+              />
+            </ShareButton>
+          )}
 
-        <PerfilContainer>
-          <InfoBox>
-            {loading ? (
-              <SkeletonContent
-                boneColor={
-                  theme.title === 'light' ? colors.primary : colors.background
-                }
-                highlightColor={
-                  theme.title === 'light'
-                    ? colors.primaryLight
-                    : colors.background
-                }
-                containerStyle={{
-                  flex: 1,
-                  justifyContent: 'center',
-                }}
-                isLoading
-                layout={[
-                  {
-                    key: 'name',
-                    width: 150,
-                    height: 16,
-                  },
-                ]}
-              />
-            ) : (
-              <Name>{nomeUsual}</Name>
-            )}
+          <PerfilContainer>
+            <InfoBox>
+              {loading ? (
+                <SkeletonContent
+                  boneColor={
+                    theme.title === 'light' ? colors.primary : colors.background
+                  }
+                  highlightColor={
+                    theme.title === 'light'
+                      ? colors.primaryLight
+                      : colors.background
+                  }
+                  containerStyle={{
+                    flex: 1,
+                    justifyContent: 'center',
+                  }}
+                  isLoading
+                  layout={[
+                    {
+                      key: 'name',
+                      width: 150,
+                      height: 16,
+                    },
+                  ]}
+                />
+              ) : (
+                <Name>{nomeUsual}</Name>
+              )}
 
-            {loading ? (
-              <SkeletonContent
-                boneColor={
-                  theme.title === 'light' ? colors.primary : colors.background
-                }
-                highlightColor={
-                  theme.title === 'light'
-                    ? colors.primaryLight
-                    : colors.background
-                }
-                containerStyle={{
-                  flex: 1,
-                  alignItems: 'flex-end',
-                }}
-                isLoading
-                layout={[
-                  {
-                    key: 'matricula',
-                    width: 80,
-                    height: 12,
-                  },
-                ]}
-              />
-            ) : (
-              <Matricula>{matricula}</Matricula>
-            )}
-          </InfoBox>
-          <AvatarBorder onPress={handleNavigateToPerfil}>
-            {loading ? (
-              <SkeletonContent
-                boneColor={
-                  theme.title === 'light' ? colors.primary : colors.background
-                }
-                highlightColor={
-                  theme.title === 'light'
-                    ? colors.primaryLight
-                    : colors.background
-                }
-                containerStyle={{
-                  flex: 1,
-                  justifyContent: 'center',
-                }}
-                isLoading
-                layout={[
-                  {
-                    key: 'avatar',
-                    width: 52,
-                    height: 52,
-                    borderRadius: 26,
-                  },
-                ]}
-              />
-            ) : (
-              <Avatar
-                source={{
-                  uri: `${avatarSaveURL || avatarSuapURL}`,
-                }}
-              />
-            )}
-          </AvatarBorder>
-        </PerfilContainer>
-      </InfoHeader>
-      <Line />
-      {loading ? undefined : <Text>Bem-vindo{'\n'}ao Save!</Text>}
-      <ContentContainer>
-        {loading ? (
-          <Name style={{ marginTop: '50%' }}>Carregando...</Name>
-        ) : (
-          <Rocket source={rocketImage} style={{ resizeMode: 'contain' }} />
-        )}
-        {loading ? undefined : (
-          <ProgressContainer>
-            <Progress.Bar progress={progress} width={328} color="#E9BF52" />
-            <Matricula>
-              Progresso Anual - {Math.round(progress * 100)}%
-            </Matricula>
-          </ProgressContainer>
-        )}
-      </ContentContainer>
-    </Container>
+              {loading ? (
+                <SkeletonContent
+                  boneColor={
+                    theme.title === 'light' ? colors.primary : colors.background
+                  }
+                  highlightColor={
+                    theme.title === 'light'
+                      ? colors.primaryLight
+                      : colors.background
+                  }
+                  containerStyle={{
+                    flex: 1,
+                    alignItems: 'flex-end',
+                  }}
+                  isLoading
+                  layout={[
+                    {
+                      key: 'matricula',
+                      width: 80,
+                      height: 12,
+                    },
+                  ]}
+                />
+              ) : (
+                <Matricula>{matricula}</Matricula>
+              )}
+            </InfoBox>
+            <AvatarBorder onPress={handleNavigateToPerfil}>
+              {loading ? (
+                <SkeletonContent
+                  boneColor={
+                    theme.title === 'light' ? colors.primary : colors.background
+                  }
+                  highlightColor={
+                    theme.title === 'light'
+                      ? colors.primaryLight
+                      : colors.background
+                  }
+                  containerStyle={{
+                    flex: 1,
+                    justifyContent: 'center',
+                  }}
+                  isLoading
+                  layout={[
+                    {
+                      key: 'avatar',
+                      width: 52,
+                      height: 52,
+                      borderRadius: 26,
+                    },
+                  ]}
+                />
+              ) : (
+                <Avatar
+                  source={{
+                    uri: `${avatarSaveURL || avatarSuapURL}`,
+                  }}
+                />
+              )}
+            </AvatarBorder>
+          </PerfilContainer>
+        </InfoHeader>
+        <Line />
+        {loading ? undefined : <Text>Bem-vindo{'\n'}ao Save!</Text>}
+        <ContentContainer>
+          {loading ? (
+            <Name style={{ marginTop: '50%' }}>Carregando...</Name>
+          ) : (
+            <Rocket source={rocketImage} style={{ resizeMode: 'contain' }} />
+          )}
+          {loading ? undefined : (
+            <ProgressContainer>
+              <Progress.Bar progress={progress} width={328} color="#E9BF52" />
+              <Matricula>
+                Progresso Anual - {Math.round(progress * 100)}%
+              </Matricula>
+            </ProgressContainer>
+          )}
+        </ContentContainer>
+      </Container>
+    </>
   );
 };
 

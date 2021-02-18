@@ -1,10 +1,10 @@
 import styled, { css } from 'styled-components/native';
 
-interface InputProps {
+interface InfoInputProps {
   isErrored: boolean;
 }
 
-export const InputInfo = styled.Text<InputProps>`
+export const InputInfo = styled.Text<InfoInputProps>`
   font-family: 'Poppins_400Regular';
   margin-left: 18px;
   font-size: 12px;
@@ -17,7 +17,7 @@ export const InputInfo = styled.Text<InputProps>`
     `}
 `;
 
-export const Container = styled.TextInput<InputProps>`
+export const Container = styled.TextInput<InfoInputProps>`
   height: 40px;
   background-color: ${props => props.theme.colors.boxFooter};
   border: 1px;

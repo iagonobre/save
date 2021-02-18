@@ -41,7 +41,6 @@ const Aulas: React.FC<AulasProps> = ({ materia }) => {
   const [loading, setLoading] = useState(true);
   const [aulas, setAulas] = useState([]);
   const { token, renew, student } = useAuth();
-  const { matricula } = student;
 
   const handleTitleHeader = useCallback(
     (faltas: number, quantidade: number, data: string) => {
@@ -87,14 +86,14 @@ const Aulas: React.FC<AulasProps> = ({ materia }) => {
         .catch(err => {
           setLoading(false);
           if (err.response.status === 401) {
-            renew(matricula);
+            renew();
           } else {
             errorGeneric(err.response.data.message);
           }
         });
     }
     requestDownloads();
-  }, [token, renew, matricula, materia]);
+  }, [token, renew, materia]);
 
   useEffect(() => {
     getAulas();

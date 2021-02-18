@@ -49,7 +49,6 @@ const Info: React.FC<InfoProps> = ({ materia }) => {
   const [componenteCurricular, setComponenteCurricular] = useState('');
   const [locaisDeAula, setLocaisDeAula] = useState([]);
   const { token, renew, student } = useAuth();
-  const { matricula } = student;
   const { colors } = useContext(ThemeContext);
 
   const handleOpenEmail = useCallback((email: string) => {
@@ -93,14 +92,14 @@ const Info: React.FC<InfoProps> = ({ materia }) => {
         .catch(err => {
           setLoading(false);
           if (err.response.status === 401) {
-            renew(matricula);
+            renew();
           } else {
             errorGeneric(err.response.data.message);
           }
         });
     }
     requestInfos();
-  }, [token, renew, matricula, materia]);
+  }, [token, renew, materia]);
 
   useEffect(() => {
     getInfos();

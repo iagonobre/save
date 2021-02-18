@@ -71,7 +71,6 @@ const Boletim: React.FC<BoletimProps> = ({ materia, periodo }) => {
   const [loading, setLoading] = useState(true);
   const [boletim, setBoletim] = useState({} as BoletimObject);
   const { token, renew, student } = useAuth();
-  const { matricula } = student;
   const {
     nota_etapa_1,
     nota_etapa_2,
@@ -106,12 +105,12 @@ const Boletim: React.FC<BoletimProps> = ({ materia, periodo }) => {
         .catch(err => {
           setLoading(false);
           if (err.response.status === 401) {
-            renew(matricula);
+            renew();
           }
         });
     }
     requestBoletins();
-  }, [materia, token, renew, matricula, periodo]);
+  }, [materia, token, renew, periodo]);
 
   useEffect(() => {
     getBoletins();
