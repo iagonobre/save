@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { api, suapApi } from '../services/api';
 
 interface Student {
+  notification?: boolean;
   matricula: string;
   nomeUsual: string;
   cpf: string;
@@ -115,27 +116,29 @@ export const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const renew = useCallback(async () => {
-    const oldToken = await AsyncStorage.getItem('@Save:token');
+    const password = await AsyncStorage.getItem('@Save:password');
 
     try {
-      const renewToken = await suapApi.post('/autenticacao/token/refresh/', {
-        token: oldToken,
+      const response = await suapApi.post('/autenticacao/token/', {
+        username: data.student.matricula,
+        password,
       });
 
-      const { token } = renewToken.data;
+      const { token } = response.data;
 
       const getStudent = await api.get('/students/', {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const { student } = getStudent.data;
+      const student = getStudent.data;
 
       await AsyncStorage.multiSet([
         ['@Save:token', token],
+        ['@Save:password', password],
         ['@Save:student', JSON.stringify(student)],
       ]);
 
-      setData({ token, student });
+      setData({ student, token });
     } catch (err) {
       signOut();
     }

@@ -11,6 +11,8 @@ import {
   avatarUpdatedSuccess,
   avatarDeleteSuccess,
   requiredPermission,
+  errorGeneric,
+  updatedSuccess,
 } from '../../../utils/errorMessages';
 import Picker from '../../../components/Picker';
 import Header from '../../../components/Header';
@@ -23,7 +25,6 @@ import { api } from '../../../services/api';
 import { classes } from '../../../utils/classArrayPicker';
 
 import { useAuth } from '../../../hooks/auth';
-import { useReward } from '../../../hooks/rewards';
 import { useTheme } from '../../../hooks/theme';
 
 import {
@@ -47,7 +48,6 @@ import {
 const Perfil: React.FC = () => {
   const { colors } = useContext(ThemeContext);
   const { signOut, student, token, updateUser } = useAuth();
-  const { darkReward } = useReward();
   const { toggleTheme, theme } = useTheme();
   const { navigate } = useNavigation();
   const modalizeRef = useRef<Modalize>(null);
@@ -133,6 +133,29 @@ const Perfil: React.FC = () => {
       });
     modalizeRef.current?.close();
   }, [updateUser, token]);
+
+  const handleChangeNotification = useCallback(
+    async (value: boolean) => {
+      try {
+        const response = await api.post(
+          '/notifications',
+          {
+            authorized: value,
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
+
+        updateUser(response.data, token);
+        updatedSuccess();
+      } catch (err) {
+        console.log(err.response.data.message);
+        errorGeneric(err.response.data.message);
+      }
+    },
+    [token, updateUser],
+  );
 
   const handleNavigateToUpdate = useCallback(() => {
     navigate('UpdateProfile');
@@ -257,21 +280,33 @@ const Perfil: React.FC = () => {
               </Press>
             )
           ) : undefined}
-          {darkReward && (
-            <Tema>
-              <Picker
-                placeholderLabel="Selecione um tema"
-                iconName="moon"
-                titleInfo="TEMA"
-                itemKey={theme.title}
-                items={[
-                  { label: 'Light', value: 'light', key: 'light' },
-                  { label: 'Dark', value: 'dark', key: 'dark' },
-                ]}
-                onValueChange={value => toggleTheme(value)}
-              />
-            </Tema>
-          )}
+
+          <Tema>
+            <Picker
+              placeholderLabel="Selecione uma opção"
+              titleInfo="NOTIFICAÇÕES ESCOLARES"
+              itemKey={student.notification ? 'true' : 'false'}
+              items={[
+                { label: 'Ativada', value: true, key: 'true' },
+                { label: 'Desativada', value: false, key: 'false' },
+              ]}
+              onValueChange={value => handleChangeNotification(value)}
+            />
+          </Tema>
+          <Tema>
+            <Picker
+              placeholderLabel="Selecione um tema"
+              iconName="moon"
+              titleInfo="TEMA"
+              itemKey={theme.title}
+              items={[
+                { label: 'Light', value: 'light', key: 'light' },
+                { label: 'Dark', value: 'dark', key: 'dark' },
+              ]}
+              onValueChange={value => toggleTheme(value)}
+            />
+          </Tema>
+
           <Footer>
             <Button onPress={handleNavigateToUpdate}>EDITAR PERFIL</Button>
             <Button redButton onPress={signOut}>

@@ -1,10 +1,6 @@
 import NetInfo from '@react-native-community/netinfo';
 import { showMessage } from 'react-native-flash-message';
 
-interface ErrorGenericProps {
-  message: string;
-}
-
 export const errorConnection: Function = () => {
   showMessage({
     duration: 5000,
@@ -21,10 +17,10 @@ export const errorConnection: Function = () => {
   });
 };
 
-export const errorGeneric: Function = ({ message }: ErrorGenericProps) => {
+export const errorGeneric: Function = (message: string) => {
   showMessage({
-    message: `${message}`,
-    description: 'Por favor, contate o administrador.',
+    message: `Ocorreu um erro!`,
+    description: `${message}`,
     type: 'danger',
     animationDuration: 1000,
     backgroundColor: '#E33D3D',

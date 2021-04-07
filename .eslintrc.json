@@ -25,6 +25,7 @@
   },
   "plugins": ["react", "react-hooks", "@typescript-eslint", "prettier"],
   "rules": {
+    "react/style-prop-object": "off",
     "react/jsx-one-expression-per-line": "off",
     "no-nested-ternary": "off",
     "@typescript-eslint/no-unused-vars": "off",

@@ -34,8 +34,8 @@ const dark: DefaultTheme = {
   colors: {
     background: '#2D2D2D',
     backgroundPurple: '#222222',
-    primaryLighter: '#A579C7',
-    primaryLight: '#9764BE',
+    primaryLighter: '#4D4D4D',
+    primaryLight: '#3D3D3D',
     primary: '#894EB4',
     primaryDark: '#7B44A0',
     line: '#2D2D2D',

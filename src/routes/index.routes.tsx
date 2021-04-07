@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppLoading } from 'expo';
+import AppLoading from 'expo-app-loading';
 import { ThemeProvider } from 'styled-components';
 import AuthRoutes from './auth.routes';
 import AppStackRoutes from './appStack.routes';
@@ -7,6 +7,7 @@ import AppStackRoutes from './appStack.routes';
 import { useAuth } from '../hooks/auth';
 import { useReward } from '../hooks/rewards';
 import { useTheme } from '../hooks/theme';
+import { useNotifications } from '../hooks/notifications';
 
 const Routes: React.FC = () => {
   const { updateRewards, firstTime } = useReward();

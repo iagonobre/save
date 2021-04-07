@@ -1,7 +1,11 @@
 import styled from 'styled-components/native';
-import { RectButton } from 'react-native-gesture-handler';
+import { Dimensions } from 'react-native';
 
-export const Container = styled.ScrollView`
+interface ProgressProps {
+  progress: number;
+}
+
+export const Container = styled.View`
   flex: 1;
   background-color: ${props => props.theme.colors.backgroundPurple};
 `;
@@ -15,33 +19,6 @@ export const Modal = styled.View`
 
 export const ContentContainer = styled.View`
   flex: 1;
-  align-items: center;
-`;
-
-export const Line = styled.View`
-  height: 1px;
-  background-color: ${props => props.theme.colors.line};
-`;
-
-export const InfoHeader = styled.View`
-  flex-direction: row;
-  justify-content: space-between;
-  margin: 28px;
-`;
-
-export const ShareButton = styled(RectButton)`
-  height: 41px;
-  width: 41px;
-  border-radius: 8px;
-  align-items: center;
-  padding-right: 2px;
-  justify-content: center;
-  background-color: ${props => props.theme.colors.secondary};
-`;
-
-export const PerfilContainer = styled.View`
-  flex-direction: row;
-  justify-content: center;
   align-items: center;
 `;
 
@@ -63,42 +40,52 @@ export const Matricula = styled.Text`
   color: ${props => props.theme.colors.secondary};
 `;
 
-export const Avatar = styled.Image`
-  width: 46px;
-  height: 46px;
-  background-color: ${props => props.theme.colors.lineWhite};
-  border-radius: 23px;
+export const Rocket = styled.Image`
+  width: 100%;
+  height: ${Math.round(Dimensions.get('window').height)}px;
+  bottom: ${80 % Math.round(Dimensions.get('window').height)}px;
+  z-index: -1000;
 `;
 
-export const AvatarBorder = styled.TouchableOpacity`
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
-  border-width: 1px;
-  align-items: center;
-  justify-content: center;
-  background-color: ${props => props.theme.colors.primary};
-  border-color: ${props => props.theme.colors.secondary};
+export const ProgressBox = styled.View`
+  width: 100%;
+  height: 4px;
+  border-bottom-right-radius: 8px;
+  background-color: ${props => props.theme.colors.line};
+`;
+
+export const ProgressBar = styled.View<ProgressProps>`
+  width: ${props => props.progress}%;
+  height: 4px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: ${props => (props.progress !== 100 ? 0 : 8)}px;
+  background-color: ${props => props.theme.colors.secondaryDark};
 `;
 
 export const ProgressContainer = styled.View`
   width: 100%;
-  align-items: center;
-  margin-bottom: 58px;
+  padding: 0px 28px 0px 28px;
 `;
 
-export const Text = styled.Text`
-  font-family: 'Archivo_700Bold';
-  color: ${props => props.theme.colors.titlePrimary};
-  font-size: 24px;
-  line-height: 32px;
-  max-width: 140px;
-  margin-left: 28px;
-  margin-top: 60%;
-  position: absolute;
-`;
-
-export const Rocket = styled.Image`
-  margin-top: 20%;
+export const ModeContainer = styled.View`
+  height: 58px;
   width: 100%;
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+  background-color: ${props => props.theme.colors.line};
+  padding: 18px 0 18px 18px;
+  justify-content: center;
+`;
+
+// align-items: center;
+// flex-direction: row;
+// justify-content: space-between;
+
+export const ModeButton = styled.View`
+  height: 58px;
+  width: 58px;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.1);
 `;

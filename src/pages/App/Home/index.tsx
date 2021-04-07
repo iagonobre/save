@@ -1,82 +1,53 @@
 import React, {
   useEffect,
   useContext,
-  useState,
   useCallback,
   useRef,
+  useState,
 } from 'react';
-import { differenceInDays } from 'date-fns';
 import * as Notifications from 'expo-notifications';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 import { checkVersion } from 'react-native-check-version';
 
-import { Share } from 'react-native';
+import { View } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import * as Progress from 'react-native-progress';
 import { useNavigation } from '@react-navigation/native';
 import { ThemeContext } from 'styled-components';
-import SkeletonContent from 'react-native-skeleton-content';
 import { Modalize } from 'react-native-modalize';
+import { differenceInDays } from 'date-fns/esm';
 import Header from '../../../components/Header';
 
 import { useTheme } from '../../../hooks/theme';
 import { useAuth } from '../../../hooks/auth';
-import { useReward } from '../../../hooks/rewards';
 import { api } from '../../../services/api';
 import { errorGeneric } from '../../../utils/errorMessages';
-import rocketImage from '../../../assets/images/rocketsave.png';
+import rocketImage from '../../../assets/images/image.png';
 
 import {
   Container,
-  InfoHeader,
-  Line,
-  ShareButton,
-  PerfilContainer,
-  InfoBox,
   Name,
   Matricula,
-  Avatar,
-  AvatarBorder,
-  ProgressContainer,
-  Text,
   Rocket,
   Modal,
+  ProgressContainer,
   ContentContainer,
+  ModeContainer,
+  ProgressBar,
+  ProgressBox,
+  ModeButton,
 } from './styles';
-
-interface SkeletonColors {
-  colors: {
-    highlight: string;
-    boner: string;
-  };
-}
+import InfoHeader from '../../../components/InfoHeader';
+import { useNotifications } from '../../../hooks/notifications';
 
 const Home: React.FC = () => {
   const { colors } = useContext(ThemeContext);
-  const { theme } = useTheme();
-  const [progress, setProgress] = useState(0);
+  const [percent, setPercent] = useState(0);
   const [loading, setLoading] = useState(true);
   const { token, updateUser, student, renew } = useAuth();
-  const { darkReward, activeDarkReward } = useReward();
-  const { navigate } = useNavigation();
-  const { avatarSuap, avatarSaveURL, nomeUsual, matricula } = student;
-  const avatarSuapURL = `https://suap.ifrn.edu.br${avatarSuap}`;
+  const { getNotificationsInApp } = useNotifications();
+  const { matricula } = student;
   const modalizeRef = useRef<Modalize>(null);
-
-  const handleNavigateToPerfil = useCallback(() => {
-    navigate('Perfil');
-  }, [navigate]);
-
-  const handleShareApp = useCallback(() => {
-    Share.share({
-      message: `Olá, aluno do IFRN! Já imaginou ter o SUAP simples e descomplicado em suas mãos? Conheça o Save, o Assistente Virtual que decola seus estudos! Consultar o SUAP nunca foi tão fácil. Não deixe de conferir!${'\n'}${'\n'}GooglePlay: https://bit.ly/save_android${'\n'}AppStore: Em Breve.`,
-    });
-    if (!darkReward) {
-      activeDarkReward();
-      setTimeout(() => navigate('DarkReward'), 1000);
-    }
-  }, [activeDarkReward, darkReward, navigate]);
 
   const registerForPushNotificationsAsync = useCallback(async () => {
     if (Constants.isDevice) {
@@ -106,23 +77,6 @@ const Home: React.FC = () => {
     }
   }, [token]);
 
-  const handleGetProgress = useCallback(() => {
-    const progressDays = differenceInDays(
-      new Date(2021, 4, 13, 0, 0),
-      new Date(2020, 9, 21, 0, 0),
-    );
-    const atualDays = differenceInDays(new Date(2021, 4, 13, 0, 0), new Date());
-
-    if (atualDays >= progressDays) {
-      return setProgress(0);
-    }
-
-    const diferenceDays = progressDays - atualDays;
-    const progressDecimal = diferenceDays / progressDays;
-
-    return setProgress(progressDecimal);
-  }, []);
-
   const handleCheckVersion = useCallback(async () => {
     const version = await checkVersion({
       bundleId: 'com.save.genp',
@@ -135,8 +89,12 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     registerForPushNotificationsAsync();
-    handleGetProgress();
     handleCheckVersion();
+    const totalDays = 199;
+    const differenceDays = differenceInDays(new Date(2021, 3, 22), new Date());
+    const realDifference = totalDays - differenceDays;
+    const percent = Math.round((realDifference / totalDays) * 100);
+    setPercent(percent);
     async function updateStudent(token: string) {
       setLoading(true);
       await api
@@ -145,6 +103,7 @@ const Home: React.FC = () => {
         })
         .then(response => {
           updateUser(response.data.student, token);
+          getNotificationsInApp();
           setLoading(false);
         })
         .catch(err => {
@@ -162,10 +121,11 @@ const Home: React.FC = () => {
     updateUser,
     renew,
     matricula,
-    handleGetProgress,
     registerForPushNotificationsAsync,
     handleCheckVersion,
+    getNotificationsInApp,
   ]);
+
   return (
     <>
       <Modalize
@@ -186,144 +146,44 @@ const Home: React.FC = () => {
       </Modalize>
       <Container>
         <Header title center page="Home" />
-        <InfoHeader>
-          {loading ? (
-            <SkeletonContent
-              boneColor={
-                theme.title === 'light' ? colors.primary : colors.background
-              }
-              highlightColor={
-                theme.title === 'light'
-                  ? colors.primaryLight
-                  : colors.background
-              }
-              containerStyle={{ flex: 1 }}
-              isLoading
-              layout={[
-                {
-                  key: 'button',
-                  width: 41,
-                  height: 41,
-                  borderRadius: 8,
-                },
-              ]}
-            />
-          ) : (
-            <ShareButton onPress={handleShareApp}>
-              <Feather
-                name="share-2"
-                size={28}
-                color={colors.backgroundPurple}
-              />
-            </ShareButton>
-          )}
 
-          <PerfilContainer>
-            <InfoBox>
-              {loading ? (
-                <SkeletonContent
-                  boneColor={
-                    theme.title === 'light' ? colors.primary : colors.background
-                  }
-                  highlightColor={
-                    theme.title === 'light'
-                      ? colors.primaryLight
-                      : colors.background
-                  }
-                  containerStyle={{
-                    flex: 1,
-                    justifyContent: 'center',
-                  }}
-                  isLoading
-                  layout={[
-                    {
-                      key: 'name',
-                      width: 150,
-                      height: 16,
-                    },
-                  ]}
-                />
-              ) : (
-                <Name>{nomeUsual}</Name>
-              )}
-
-              {loading ? (
-                <SkeletonContent
-                  boneColor={
-                    theme.title === 'light' ? colors.primary : colors.background
-                  }
-                  highlightColor={
-                    theme.title === 'light'
-                      ? colors.primaryLight
-                      : colors.background
-                  }
-                  containerStyle={{
-                    flex: 1,
-                    alignItems: 'flex-end',
-                  }}
-                  isLoading
-                  layout={[
-                    {
-                      key: 'matricula',
-                      width: 80,
-                      height: 12,
-                    },
-                  ]}
-                />
-              ) : (
-                <Matricula>{matricula}</Matricula>
-              )}
-            </InfoBox>
-            <AvatarBorder onPress={handleNavigateToPerfil}>
-              {loading ? (
-                <SkeletonContent
-                  boneColor={
-                    theme.title === 'light' ? colors.primary : colors.background
-                  }
-                  highlightColor={
-                    theme.title === 'light'
-                      ? colors.primaryLight
-                      : colors.background
-                  }
-                  containerStyle={{
-                    flex: 1,
-                    justifyContent: 'center',
-                  }}
-                  isLoading
-                  layout={[
-                    {
-                      key: 'avatar',
-                      width: 52,
-                      height: 52,
-                      borderRadius: 26,
-                    },
-                  ]}
-                />
-              ) : (
-                <Avatar
-                  source={{
-                    uri: `${avatarSaveURL || avatarSuapURL}`,
-                  }}
-                />
-              )}
-            </AvatarBorder>
-          </PerfilContainer>
-        </InfoHeader>
-        <Line />
-        {loading ? undefined : <Text>Bem-vindo{'\n'}ao Save!</Text>}
+        {loading ? <InfoHeader loading /> : <InfoHeader />}
         <ContentContainer>
+          {!loading && (
+            <ProgressContainer>
+              <ModeContainer>
+                <Name style={{ textAlign: 'left' }}>Progresso Anual</Name>
+                <Matricula style={{ textAlign: 'left' }}>
+                  {percent}% completo
+                </Matricula>
+              </ModeContainer>
+              <ProgressBox>
+                <ProgressBar progress={percent} />
+              </ProgressBox>
+            </ProgressContainer>
+          )}
+          {/*
+          {!loading && (
+            <ModeContainer>
+              <Name>Iniciar modo Foco</Name>
+              <Matricula style={{ textAlign: 'left' }}>
+                Técnica de Pomodoro
+              </Matricula>
+              <ModeButton>
+                <Feather
+                  name="arrow-right-circle"
+                  size={28}
+                  color={colors.buttonText}
+                />
+              </ModeButton>
+            </ModeContainer>
+            )
+          }
+          */}
           {loading ? (
             <Name style={{ marginTop: '50%' }}>Carregando...</Name>
           ) : (
             <Rocket source={rocketImage} style={{ resizeMode: 'contain' }} />
-          )}
-          {loading ? undefined : (
-            <ProgressContainer>
-              <Progress.Bar progress={progress} width={328} color="#E9BF52" />
-              <Matricula>
-                Progresso Anual - {Math.round(progress * 100)}%
-              </Matricula>
-            </ProgressContainer>
           )}
         </ContentContainer>
       </Container>

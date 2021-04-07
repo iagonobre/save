@@ -1,7 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import NetInfo from '@react-native-community/netinfo';
-import React from 'react';
-import { AppLoading } from 'expo';
+import * as Updates from 'expo-updates';
+import React, { useEffect } from 'react';
+import AppLoading from 'expo-app-loading';
 import {
   Archivo_400Regular,
   Archivo_700Bold,
@@ -25,6 +26,17 @@ const App: React.FC = () => {
     Poppins_600SemiBold,
     Poppins_500Medium,
   });
+
+  useEffect(() => {
+    async function updateApp() {
+      const { isAvailable } = await Updates.checkForUpdateAsync();
+      if (isAvailable) {
+        await Updates.fetchUpdateAsync();
+        await Updates.reloadAsync(); // depende da sua estratégia
+      }
+    }
+    updateApp();
+  }, []);
 
   if (!fontsLoaded) {
     return <AppLoading />;
