@@ -37,12 +37,14 @@ interface PeriodObject {
 
 const Estudos: React.FC = () => {
   const { colors } = useContext(ThemeContext);
-  const { token, renew, periodKey } = useAuth();
+  const { token, renew, periodKey, student } = useAuth();
   const [periods, setPeriods] = useState([]);
   const [itemKey, setItemKey] = useState('');
   const [loading, setLoading] = useState(true);
   const [value, setValue] = useState('');
   const { navigate } = useNavigation();
+
+  const { matricula } = student;
 
   const getClasses = useCallback(() => {
     async function getPeriods(): Promise<void> {
@@ -81,14 +83,14 @@ const Estudos: React.FC = () => {
         })
         .catch(err => {
           if (err.response.status === 401) {
-            renew();
+            renew(matricula);
           } else {
             errorGeneric(err.response.data.message);
           }
         });
     }
     getPeriods();
-  }, [token, renew, periodKey]);
+  }, [token, renew, periodKey, matricula]);
 
   useEffect(() => {
     getClasses();

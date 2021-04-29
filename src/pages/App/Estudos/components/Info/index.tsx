@@ -51,6 +51,8 @@ const Info: React.FC<InfoProps> = ({ materia }) => {
   const { token, renew, student } = useAuth();
   const { colors } = useContext(ThemeContext);
 
+  const { matricula } = student;
+
   const handleOpenEmail = useCallback((email: string) => {
     MailComposer.composeAsync({
       recipients: [`${email}`],
@@ -92,14 +94,14 @@ const Info: React.FC<InfoProps> = ({ materia }) => {
         .catch(err => {
           setLoading(false);
           if (err.response.status === 401) {
-            renew();
+            renew(matricula);
           } else {
             errorGeneric(err.response.data.message);
           }
         });
     }
     requestInfos();
-  }, [token, renew, materia]);
+  }, [token, renew, materia, matricula]);
 
   useEffect(() => {
     getInfos();

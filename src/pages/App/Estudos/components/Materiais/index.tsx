@@ -40,6 +40,8 @@ const Materiais: React.FC<MateriaisProps> = ({ materia }) => {
   const { token, renew, student } = useAuth();
   const { colors } = useContext(ThemeContext);
 
+  const { matricula } = student;
+
   const getDownloads = useCallback(() => {
     async function requestDownloads() {
       setLoading(true);
@@ -61,12 +63,12 @@ const Materiais: React.FC<MateriaisProps> = ({ materia }) => {
         .catch(err => {
           setLoading(false);
           if (err.response.status === 401) {
-            renew();
+            renew(matricula);
           }
         });
     }
     requestDownloads();
-  }, [materia, token, renew]);
+  }, [materia, token, renew, matricula]);
 
   useEffect(() => {
     getDownloads();

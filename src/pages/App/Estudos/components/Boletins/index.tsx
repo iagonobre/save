@@ -82,6 +82,8 @@ const Boletim: React.FC<BoletimProps> = ({ materia, periodo }) => {
     percentual_carga_horaria_frequentada,
   } = boletim;
 
+  const { matricula } = student;
+
   const getBoletins = useCallback(() => {
     async function requestBoletins() {
       setLoading(true);
@@ -105,12 +107,12 @@ const Boletim: React.FC<BoletimProps> = ({ materia, periodo }) => {
         .catch(err => {
           setLoading(false);
           if (err.response.status === 401) {
-            renew();
+            renew(matricula);
           }
         });
     }
     requestBoletins();
-  }, [materia, token, renew, periodo]);
+  }, [materia, token, renew, periodo, matricula]);
 
   useEffect(() => {
     getBoletins();

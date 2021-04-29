@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import { api, suapApi } from '../services/api';
+import { errorGeneric } from '../utils/errorMessages';
 
 interface Student {
   notification?: boolean;
@@ -41,7 +42,7 @@ interface AuthContextData {
   token: string;
   loading: boolean;
   periodKey: string;
-  renew(): Promise<void>;
+  renew(matricula?: string): Promise<void>;
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
   setPeriodKey(period: string): void;
@@ -90,7 +91,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       headers: { Authorization: `Bearer ${token}` },
     });
 
-    const student = getStudent.data;
+    const { student } = getStudent.data;
 
     await AsyncStorage.multiSet([
       ['@Save:token', token],
@@ -117,10 +118,19 @@ export const AuthProvider: React.FC = ({ children }) => {
 
   const renew = useCallback(async () => {
     const password = await AsyncStorage.getItem('@Save:password');
+    const studentOld = await AsyncStorage.getItem('@Save:student');
+
+    const studentNew = await JSON.parse(studentOld || '');
+
+    if (!studentNew.matricula) {
+      signOut();
+    }
+
+    const { matricula } = studentNew;
 
     try {
       const response = await suapApi.post('/autenticacao/token/', {
-        username: data.student.matricula,
+        username: matricula,
         password,
       });
 
@@ -130,7 +140,7 @@ export const AuthProvider: React.FC = ({ children }) => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      const student = getStudent.data;
+      const { student } = getStudent.data;
 
       await AsyncStorage.multiSet([
         ['@Save:token', token],
@@ -141,6 +151,7 @@ export const AuthProvider: React.FC = ({ children }) => {
       setData({ student, token });
     } catch (err) {
       signOut();
+      errorGeneric(err.response.data.message);
     }
   }, [signOut]);
 

@@ -47,7 +47,8 @@ function calc({
         const nM2 = 150 - (3 * nota_etapa_2.nota) / 2;
 
         const needed = Math.floor(Math.min(nM1, nM2));
-        if (nota_avaliacao_final) {
+
+        if (nota_avaliacao_final.nota) {
           if (nota_avaliacao_final.nota >= needed) {
             return <StatusBold>Aprovado na Prova Final.</StatusBold>;
           }

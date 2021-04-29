@@ -150,7 +150,6 @@ const Perfil: React.FC = () => {
         updateUser(response.data, token);
         updatedSuccess();
       } catch (err) {
-        console.log(err.response.data.message);
         errorGeneric(err.response.data.message);
       }
     },

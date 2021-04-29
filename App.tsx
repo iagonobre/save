@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import NetInfo from '@react-native-community/netinfo';
 import * as Updates from 'expo-updates';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import AppLoading from 'expo-app-loading';
 import {
   Archivo_400Regular,
@@ -19,6 +19,7 @@ import AppProvider from './src/hooks/index';
 import Routes from './src/routes/index.routes';
 
 const App: React.FC = () => {
+  const [loading, setLoading] = useState(false);
   const [fontsLoaded] = useFonts({
     Archivo_400Regular,
     Archivo_700Bold,
@@ -31,14 +32,16 @@ const App: React.FC = () => {
     async function updateApp() {
       const { isAvailable } = await Updates.checkForUpdateAsync();
       if (isAvailable) {
+        setLoading(true);
         await Updates.fetchUpdateAsync();
-        await Updates.reloadAsync(); // depende da sua estratégia
+        await Updates.reloadAsync();
+        setLoading(false);
       }
     }
     updateApp();
   }, []);
 
-  if (!fontsLoaded) {
+  if (!fontsLoaded || loading) {
     return <AppLoading />;
   }
 

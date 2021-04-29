@@ -102,17 +102,13 @@ const Home: React.FC = () => {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then(response => {
-          updateUser(response.data.student, token);
+          updateUser(response.data.student, response.data.student.token);
           getNotificationsInApp();
           setLoading(false);
         })
-        .catch(err => {
+        .catch(() => {
+          renew(matricula);
           setLoading(false);
-          if (err.response.status === 401) {
-            renew();
-          } else {
-            errorGeneric(err.response.data.message);
-          }
         });
     }
     updateStudent(token);
@@ -154,11 +150,11 @@ const Home: React.FC = () => {
               <ModeContainer>
                 <Name style={{ textAlign: 'left' }}>Progresso Anual</Name>
                 <Matricula style={{ textAlign: 'left' }}>
-                  {percent}% completo
+                  100% completo
                 </Matricula>
               </ModeContainer>
               <ProgressBox>
-                <ProgressBar progress={percent} />
+                <ProgressBar progress={100} />
               </ProgressBox>
             </ProgressContainer>
           )}
