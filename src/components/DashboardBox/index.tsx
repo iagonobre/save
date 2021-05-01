@@ -5,7 +5,7 @@ import { Container, Content, Header, TextHeader } from './styles';
 interface DashboardProps {
   header: string;
   error?: boolean;
-  height: number;
+  height?: number;
   alignCenter?: boolean;
 }
 

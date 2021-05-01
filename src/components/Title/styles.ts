@@ -1,3 +1,4 @@
+import { RectButton } from 'react-native-gesture-handler';
 import styled from 'styled-components/native';
 
 export const TitleContainer = styled.View`
@@ -28,4 +29,30 @@ export const Title = styled.Text`
   line-height: 32px;
   max-width: 140px;
   margin-bottom: 40px;
+`;
+
+export const ShareButton = styled(RectButton)`
+  height: 41px;
+  width: 41px;
+  border-radius: 8px;
+  margin-bottom: 40px;
+  align-items: center;
+  justify-content: center;
+  background-color: ${props => props.theme.colors.secondary};
+`;
+
+export const ReportContainer = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+export const Circle = styled.View`
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background-color: ${props => props.theme.colors.warnColor};
 `;

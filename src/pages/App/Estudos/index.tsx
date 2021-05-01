@@ -1,54 +1,311 @@
-import React, { useEffect, useState, useCallback, useContext } from 'react';
+import React, { useState, useCallback, useEffect, useContext } from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { ThemeContext } from 'styled-components';
 
 import SkeletonContent from 'react-native-skeleton-content';
-import { useNavigation } from '@react-navigation/native';
-import {
-  Container,
-  PickerContainer,
-  Line,
-  Banner,
-  ButtonContainer,
-} from './styles';
-
+import { RectButton } from 'react-native-gesture-handler';
 import Header from '../../../components/Header';
 import Title from '../../../components/Title';
-import BoxContainer from '../../../components/BoxContainer';
 import Picker from '../../../components/Picker';
-import Button from '../../../components/Button';
+import BoxContainer from '../../../components/BoxContainer';
+import SquareMiniButton from '../../../components/SquareMiniButton';
+import Materiais from './components/Materiais';
+import Boletim from './components/Boletins';
+import Aulas from './components/Aulas';
+import Info from './components/Info';
+import DashboardBox from '../../../components/DashboardBox';
 
-import { errorGeneric } from '../../../utils/errorMessages';
+import { periodNotFound, errorGeneric } from '../../../utils/errorMessages';
+
 import { suapApi } from '../../../services/api';
-
-import {
-  estudosSkeletonStylePeriod,
-  estudosSkeletonStyleButton,
-} from '../../../utils/skeletonStyles';
 
 import { useAuth } from '../../../hooks/auth';
 
-import studyImage from '../../../assets/images/study-background.png';
+import searchImage from '../../../assets/images/search.png';
+
+import {
+  estudosSkeletonStylePeriod,
+  dashboardSkeletonTab,
+  estudosSkeletonStylePeriods,
+  boletimSkeletonStyle,
+} from '../../../utils/skeletonStyles';
+
+import {
+  Container,
+  BoxHeader,
+  PeriodsContainer,
+  PeriodButton,
+  PeriodText,
+  NavBarContainer,
+  Line,
+  Grade,
+  SearchTitle,
+  Banner,
+  SearchSubtitle,
+  SearchContainer,
+  GradeHeaderContainer,
+  GradeType,
+  GradeText,
+  GradeSemestersContainer,
+} from './styles';
+
+interface SubjectObject {
+  id: string;
+  descricao: string;
+}
+
+interface Period {
+  label: string;
+  value: string;
+  key: string;
+}
 
 interface PeriodObject {
   ano_letivo: string;
   periodo_letivo: string;
 }
 
+interface RouteParams {
+  periodNotification?: string;
+  subjectNotification?: string;
+}
+
+interface Boletim {
+  codigo_diario: string;
+  disciplina: string;
+  quantidade_avaliacoes: number;
+  nota_etapa_1: {
+    nota?: number;
+  };
+  nota_etapa_2: {
+    nota?: number;
+  };
+  nota_etapa_3: {
+    nota?: number;
+  };
+  nota_etapa_4: {
+    nota?: number;
+  };
+}
+
 const Estudos: React.FC = () => {
   const { colors } = useContext(ThemeContext);
-  const { token, renew, periodKey, student } = useAuth();
-  const [periods, setPeriods] = useState([]);
-  const [itemKey, setItemKey] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [value, setValue] = useState('');
-  const { navigate } = useNavigation();
+  const { goBack } = useNavigation();
+  const { params } = useRoute();
+  const { token, renew, setPeriodKey, periodKey, student } = useAuth();
+
+  const [periods, setPeriods] = useState<Period[]>([]);
+  const [period, setPeriod] = useState('');
+  const [boletins, setBoletins] = useState<Boletim[]>([]);
+
+  const [page, setPage] = useState('Boletim');
+
+  const [periodLoading, setPeriodLoading] = useState(true);
+  const [materiasLoading, setMateriasLoading] = useState(true);
+  const [boletinsLoading, setBoletinsLoading] = useState(true);
+
+  const [materias, setMaterias] = useState<Period[]>([]);
+  const [selectedSubject, setSelectedSubject] = useState('');
 
   const { matricula } = student;
 
-  const getClasses = useCallback(() => {
+  const handlePage = useCallback((page: string) => {
+    setPage(page);
+  }, []);
+
+  const handleChangePeriod = useCallback(
+    (value: string) => {
+      setMaterias([]);
+      setPeriodKey(value);
+      setPeriod(value);
+    },
+    [setPeriodKey],
+  );
+
+  const handleGetReports = useCallback(() => {
+    return (
+      <SearchContainer>
+        <SearchTitle>Boletim Geral</SearchTitle>
+        <SearchSubtitle>Toque na matéria para detalhar</SearchSubtitle>
+        <DashboardBox header={`Notas - ${period}`}>
+          <GradeHeaderContainer>
+            <GradeType>MATÉRIA</GradeType>
+            <GradeSemestersContainer>
+              <GradeType>1° BI</GradeType>
+              <GradeType>2° BI</GradeType>
+              <GradeType>3° BI</GradeType>
+              <GradeType>4° BI</GradeType>
+            </GradeSemestersContainer>
+          </GradeHeaderContainer>
+          {boletins.map(boletim => {
+            const [, name] = boletim.disciplina.split('- ');
+            return (
+              <RectButton
+                key={boletim.codigo_diario}
+                onPress={() => {
+                  setSelectedSubject(boletim.codigo_diario);
+                }}
+              >
+                <Line />
+                <GradeHeaderContainer>
+                  <GradeType>{name}</GradeType>
+                  <GradeSemestersContainer>
+                    <Grade>
+                      <GradeText
+                        redColor={
+                          boletim.nota_etapa_1.nota
+                            ? boletim.nota_etapa_1.nota < 60
+                            : false
+                        }
+                      >
+                        {boletim.nota_etapa_1.nota || '-'}
+                      </GradeText>
+                    </Grade>
+                    <Grade>
+                      <GradeText
+                        redColor={
+                          boletim.nota_etapa_2.nota
+                            ? boletim.nota_etapa_2.nota < 60
+                            : false
+                        }
+                      >
+                        {boletim.nota_etapa_2.nota || '-'}
+                      </GradeText>
+                    </Grade>
+                    <Grade>
+                      <GradeText
+                        redColor={
+                          boletim.nota_etapa_3.nota
+                            ? boletim.nota_etapa_3.nota < 60
+                            : false
+                        }
+                      >
+                        {boletim.nota_etapa_3.nota || '-'}
+                      </GradeText>
+                    </Grade>
+                    <Grade>
+                      <GradeText
+                        redColor={
+                          boletim.nota_etapa_4.nota
+                            ? boletim.nota_etapa_4.nota < 60
+                            : false
+                        }
+                      >
+                        {boletim.nota_etapa_4.nota || '-'}
+                      </GradeText>
+                    </Grade>
+                  </GradeSemestersContainer>
+                </GradeHeaderContainer>
+              </RectButton>
+            );
+          })}
+        </DashboardBox>
+      </SearchContainer>
+    );
+  }, [period, boletins]);
+
+  const handleChangePage = useCallback(
+    (page: string, selectedSubject: string) => {
+      if (page === 'Boletim') {
+        return <Boletim materia={selectedSubject} periodo={period} />;
+      }
+      if (page === 'Materiais') {
+        return <Materiais materia={selectedSubject} />;
+      }
+      if (page === 'Aulas') {
+        return <Aulas materia={selectedSubject} />;
+      }
+      if (page === 'Info') {
+        return <Info materia={selectedSubject} />;
+      }
+      return null;
+    },
+    [period],
+  );
+
+  useEffect(() => {
+    if (periodKey) {
+      setPeriod(periodKey as string);
+    }
+  }, [periodKey]);
+
+  useEffect(() => {
+    async function getReports(): Promise<void> {
+      if (period && token) {
+        await suapApi
+          .get(
+            `https://suap.ifrn.edu.br/api/v2/minhas-informacoes/boletim/${period}`,
+            {
+              headers: {
+                Authorization: `JWT ${token}`,
+              },
+            },
+          )
+          .then(response => {
+            setBoletins(response.data);
+            setBoletinsLoading(false);
+          });
+      }
+    }
+    setBoletinsLoading(true);
+    getReports();
+  }, [period, token]);
+
+  useEffect(() => {
+    async function requestSubjects(): Promise<void> {
+      if (!period) {
+        return;
+      }
+      await suapApi
+        .get(
+          `https://suap.ifrn.edu.br/api/v2/minhas-informacoes/turmas-virtuais/${period}`,
+          {
+            headers: {
+              Authorization: `JWT ${token}`,
+            },
+          },
+        )
+        .then(async response => {
+          const suapSubjects = response.data;
+
+          const data = suapSubjects.map(
+            (obj: SubjectObject, materias: Array<object>) => {
+              return {
+                ...materias,
+                label: `${obj.descricao}`,
+                value: `${obj.id}`,
+                key: `${obj.id}`,
+              };
+            },
+          );
+
+          setMaterias(data);
+        })
+        .catch(err => {
+          setMateriasLoading(false);
+          if (err.response.status === 404) {
+            setPeriod('');
+            setPeriodKey('');
+            periodNotFound();
+            return;
+          }
+          if (err.response.status === 401) {
+            renew(matricula);
+          } else {
+            setPeriod('');
+            setPeriodKey('');
+            errorGeneric(err.response.data.message);
+          }
+        });
+    }
+    setMateriasLoading(true);
+    requestSubjects();
+    setMateriasLoading(false);
+  }, [matricula, period, token, renew, setPeriod, setPeriodKey]);
+
+  useEffect(() => {
     async function getPeriods(): Promise<void> {
-      setLoading(true);
       await suapApi
         .get('/minhas-informacoes/meus-periodos-letivos/', {
           headers: {
@@ -71,15 +328,10 @@ const Estudos: React.FC = () => {
 
           if (!periodKey) {
             const { key } = data[data.length - 1];
-            setItemKey(key);
-            setValue(key);
+            setPeriod(key);
           }
-          if (periodKey) {
-            setItemKey(periodKey as string);
-            setValue(periodKey as string);
-          }
-          setPeriods(data);
-          setLoading(false);
+
+          setPeriods(data.reverse());
         })
         .catch(err => {
           if (err.response.status === 401) {
@@ -89,27 +341,72 @@ const Estudos: React.FC = () => {
           }
         });
     }
+
+    setPeriodLoading(true);
+
+    setPeriodKey(period);
     getPeriods();
-  }, [token, renew, periodKey, matricula]);
 
-  useEffect(() => {
-    getClasses();
-  }, [getClasses]);
+    if (params) {
+      const { periodNotification, subjectNotification } = params as RouteParams;
 
-  function handleNavigateToDashboard() {
-    navigate('Dashboard', {
-      period: value,
-    });
-  }
+      if (periodNotification && subjectNotification) {
+        handleChangePeriod(periodNotification);
+        setSelectedSubject(subjectNotification);
+        setPage('Boletim');
+      }
+    }
+    setPeriodLoading(false);
+  }, [
+    period,
+    setPeriodKey,
+    handleChangePeriod,
+    renew,
+    token,
+    goBack,
+    matricula,
+    periodKey,
+    params,
+  ]);
 
   return (
     <>
       <Container>
         <Header center page="Estudos" />
-        <Title>Seus Estudos</Title>
+        <Title />
         <BoxContainer>
-          <PickerContainer>
-            {loading ? (
+          <BoxHeader>
+            {periodLoading ? (
+              <SkeletonContent
+                boneColor={colors.background}
+                highlightColor={colors.boxFooter}
+                containerStyle={{
+                  flex: 1,
+                  marginHorizontal: 18,
+                  flexDirection: 'row',
+                }}
+                isLoading
+                layout={estudosSkeletonStylePeriods}
+              />
+            ) : (
+              <PeriodsContainer
+                horizontal
+                showsHorizontalScrollIndicator={false}
+              >
+                {periods.map((suapPeriod: Period) => (
+                  <PeriodButton
+                    key={suapPeriod.value}
+                    isCurrentPeriod={suapPeriod.value === period}
+                    onPress={() => handleChangePeriod(suapPeriod.value)}
+                  >
+                    <PeriodText isCurrentPeriod={suapPeriod.value === period}>
+                      {suapPeriod.label}
+                    </PeriodText>
+                  </PeriodButton>
+                ))}
+              </PeriodsContainer>
+            )}
+            {materiasLoading ? (
               <SkeletonContent
                 boneColor={colors.background}
                 highlightColor={colors.boxFooter}
@@ -119,35 +416,105 @@ const Estudos: React.FC = () => {
               />
             ) : (
               <Picker
-                iconName="calendar"
-                titleInfo="PERÍODO LETIVO"
-                placeholderLabel="Escolha um período"
-                items={periods}
-                itemKey={itemKey}
+                titleInfo="MATÉRIAS"
+                iconName="book-open"
+                placeholderLabel="Boletim Geral"
+                placeholderValue=""
+                items={materias}
+                value={selectedSubject}
                 onValueChange={value => {
-                  setValue(value);
+                  setSelectedSubject(value);
                 }}
               />
             )}
-          </PickerContainer>
+            {materiasLoading && periodLoading ? (
+              <SkeletonContent
+                boneColor={colors.background}
+                highlightColor={colors.boxFooter}
+                containerStyle={{
+                  flexDirection: 'row',
+                  marginHorizontal: 18,
+                  marginTop: 4,
+                  marginBottom: 38,
+                  justifyContent: 'space-between',
+                }}
+                isLoading
+                layout={dashboardSkeletonTab}
+              />
+            ) : (
+              <NavBarContainer>
+                <SquareMiniButton
+                  icon="file-text"
+                  text="Boletim"
+                  currentPage={page}
+                  onPress={() => {
+                    handlePage('Boletim');
+                  }}
+                />
+                <SquareMiniButton
+                  icon="paperclip"
+                  text="Materiais"
+                  currentPage={page}
+                  onPress={() => {
+                    handlePage('Materiais');
+                  }}
+                />
+
+                <SquareMiniButton
+                  icon="edit-3"
+                  text="Aulas"
+                  currentPage={page}
+                  onPress={() => {
+                    handlePage('Aulas');
+                  }}
+                />
+                <SquareMiniButton
+                  icon="info"
+                  text="Info"
+                  currentPage={page}
+                  onPress={() => {
+                    handlePage('Info');
+                  }}
+                />
+              </NavBarContainer>
+            )}
+          </BoxHeader>
           <Line />
-          {loading ? undefined : (
-            <Banner source={studyImage} style={{ resizeMode: 'contain' }} />
-          )}
-          {loading ? (
-            <SkeletonContent
-              boneColor={colors.background}
-              highlightColor={colors.boxFooter}
-              containerStyle={{ flex: 1, marginHorizontal: 18 }}
-              isLoading
-              layout={estudosSkeletonStyleButton}
-            />
+          {selectedSubject ? (
+            handleChangePage(page, selectedSubject)
+          ) : !period ? (
+            <SearchContainer>
+              <SearchTitle>Nenhum período selecionado!</SearchTitle>
+              <SearchSubtitle>
+                Selecione um período para prosseguir.
+              </SearchSubtitle>
+              <Banner source={searchImage} style={{ resizeMode: 'contain' }} />
+            </SearchContainer>
+          ) : page === 'Boletim' ? (
+            boletinsLoading ? (
+              <SkeletonContent
+                boneColor={colors.background}
+                highlightColor={colors.boxFooter}
+                containerStyle={{
+                  flex: 1,
+                  marginHorizontal: 18,
+                  marginTop: 18,
+                  paddingBottom: 18,
+                }}
+                isLoading
+                layout={boletimSkeletonStyle}
+              />
+            ) : (
+              handleGetReports()
+            )
           ) : (
-            <ButtonContainer>
-              <Button onPress={handleNavigateToDashboard}>
-                ACESSAR DASHBOARD
-              </Button>
-            </ButtonContainer>
+            <SearchContainer>
+              <SearchTitle>Nenhuma matéria selecionada!</SearchTitle>
+              <SearchSubtitle>
+                Selecione uma matéria para prosseguir.
+              </SearchSubtitle>
+              <Banner source={searchImage} style={{ resizeMode: 'contain' }} />
+            </SearchContainer>
           )}
         </BoxContainer>
       </Container>

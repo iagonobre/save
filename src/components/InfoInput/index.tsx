@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
 import { useField } from '@unform/core';
-import { TextInputProps } from 'react-native';
+import { StyleProp, TextInputProps, TextStyle } from 'react-native';
 import { Container, InputInfo } from './styles';
 
 interface InfoInputProps extends TextInputProps {
@@ -19,6 +19,7 @@ const InfoInput: React.FC<InfoInputProps> = ({
   name,
   title,
   error = false,
+  children,
   ...rest
 }) => {
   const inputElementRef = useRef<any>(null);
@@ -44,7 +45,7 @@ const InfoInput: React.FC<InfoInputProps> = ({
 
   return (
     <>
-      <InputInfo isErrored={error}>{title}</InputInfo>
+      {children || <InputInfo isErrored={error}>{title}</InputInfo>}
       <Container
         ref={inputElementRef}
         onChangeText={value => {

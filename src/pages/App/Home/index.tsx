@@ -39,8 +39,13 @@ import {
 } from './styles';
 import InfoHeader from '../../../components/InfoHeader';
 import { useNotifications } from '../../../hooks/notifications';
+import { useReward } from '../../../hooks/rewards';
 
 const Home: React.FC = () => {
+  const lastNotificationResponse = Notifications.useLastNotificationResponse();
+
+  const { changelog } = useReward();
+  const { navigate } = useNavigation();
   const { colors } = useContext(ThemeContext);
   const [percent, setPercent] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -112,8 +117,14 @@ const Home: React.FC = () => {
         });
     }
     updateStudent(token);
+
+    if (!changelog) {
+      navigate('DarkReward');
+    }
   }, [
+    changelog,
     token,
+    navigate,
     updateUser,
     renew,
     matricula,
@@ -121,6 +132,23 @@ const Home: React.FC = () => {
     handleCheckVersion,
     getNotificationsInApp,
   ]);
+
+  useEffect(() => {
+    if (
+      lastNotificationResponse &&
+      lastNotificationResponse.notification.request.content.data.period &&
+      lastNotificationResponse.notification.request.content.data.subject &&
+      lastNotificationResponse.actionIdentifier ===
+        Notifications.DEFAULT_ACTION_IDENTIFIER
+    ) {
+      navigate('Estudos', {
+        periodNotification:
+          lastNotificationResponse.notification.request.content.data.period,
+        subjectNotification:
+          lastNotificationResponse.notification.request.content.data.subject,
+      });
+    }
+  }, [lastNotificationResponse, navigate]);
 
   return (
     <>

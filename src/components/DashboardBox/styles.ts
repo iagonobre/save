@@ -17,8 +17,13 @@ export const Content = styled.View<StyleProps>`
   border: 1px;
   border-color: ${props => props.theme.colors.lineWhite};
   background-color: ${props => props.theme.colors.boxFooter};
-  max-height: ${props => props.height}px;
   justify-content: center;
+
+  ${props =>
+    props.height &&
+    css`
+      max-height: ${props.height}px;
+    `}
 
   ${props =>
     props.alignCenter &&

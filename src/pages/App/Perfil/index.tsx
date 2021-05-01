@@ -182,7 +182,7 @@ const Perfil: React.FC = () => {
       </Modalize>
       <Container>
         <Header center page="Perfil" />
-        <Title>Dados Pessoais</Title>
+        <Title report>Dados Pessoais</Title>
         <BoxContainer>
           <Profile>
             <AvatarButton onPress={onOpen}>

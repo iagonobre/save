@@ -12,11 +12,13 @@ interface HeaderProps {
   page?: string;
   center?: boolean;
   screenName?: string;
+  report?: boolean;
 }
 
 const Header: React.FC<HeaderProps> = ({
   back = false,
   center = false,
+  report = false,
   page,
   screenName,
 }) => {

@@ -8,6 +8,7 @@ import {
   Banner,
   Title,
   TitleBold,
+  SmallTitle,
   InfoTitle,
   Footer,
   Details,
@@ -17,12 +18,15 @@ import {
 
 import darkImage from '../../../assets/images/darktheme.png';
 import arrowIcon from '../../../assets/images/icons/next.png';
+import { useReward } from '../../../hooks/rewards';
 
 const DarkReward: React.FC = () => {
   const { goBack } = useNavigation();
+  const { activeChangelog } = useReward();
 
   function handleGoBack() {
     goBack();
+    activeChangelog();
   }
 
   return (
@@ -33,10 +37,13 @@ const DarkReward: React.FC = () => {
 
       <ActionContainer>
         <InfoTitle>Wooww!</InfoTitle>
-        <Title>
-          Você ganhou um prêmio!{'\n'}Mude o tema do <TitleBold>Save</TitleBold>{' '}
-          na{'\n'}aba Perfil.
-        </Title>
+        <Title>Novas funcionalidades:</Title>
+        <SmallTitle>
+          - Ao apertar em uma notificação escolar ela te levará ao boletim!
+        </SmallTitle>
+        <SmallTitle>
+          - Agora você pode criar tickets e sugestões na aba perfil!
+        </SmallTitle>
         <Footer>
           <Details>
             <DetailGrey />

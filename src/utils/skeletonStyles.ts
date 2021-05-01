@@ -60,6 +60,32 @@ export const aulasSkeletonStyle = [
   },
 ];
 
+export const estudosSkeletonStylePeriods = [
+  {
+    key: 'periodsBox',
+    width: 80,
+    height: 30,
+    marginTop: 10,
+    marginBottom: 20,
+  },
+  {
+    key: 'periodsBox2',
+    width: 80,
+    height: 30,
+    marginTop: 10,
+    marginBottom: 20,
+    marginLeft: 18,
+  },
+  {
+    key: 'periodsBox3',
+    width: 80,
+    height: 30,
+    marginTop: 10,
+    marginBottom: 20,
+    marginLeft: 18,
+  },
+];
+
 export const estudosSkeletonStylePeriod = [
   {
     key: 'period',

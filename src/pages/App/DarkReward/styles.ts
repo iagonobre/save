@@ -1,7 +1,7 @@
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
-  height: 48%;
+  height: 39%;
   background-color: #222222;
 `;
 
@@ -29,6 +29,13 @@ export const Title = styled.Text`
   color: ${props => props.theme.colors.textBase};
   font-size: 20px;
   line-height: 34px;
+  margin-top: 10px;
+`;
+
+export const SmallTitle = styled.Text`
+  font-family: 'Poppins_500Medium';
+  color: ${props => props.theme.colors.textBase};
+  font-size: 13px;
   margin-top: 10px;
 `;
 

@@ -51,6 +51,23 @@ export const updatedSuccess: Function = () => {
   });
 };
 
+export const ticketSucess: Function = () => {
+  showMessage({
+    message: 'Ticket criado com sucesso!',
+    description: 'Logo mais ele será avaliado pela nossa Equipe',
+    type: 'success',
+    animationDuration: 1000,
+    backgroundColor: '#00AE91',
+    titleStyle: {
+      fontFamily: 'Archivo_700Bold',
+    },
+    textStyle: {
+      fontFamily: 'Archivo_400Regular',
+    },
+    icon: 'success',
+  });
+};
+
 export const updatedError: Function = () => {
   showMessage({
     message: 'Erro ao atualizar',
