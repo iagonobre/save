@@ -1,8 +1,8 @@
 Arguments: 
-  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js add @react-native-async-storage/async-storage
 
 PATH: 
-  C:\windows\system32;C:\windows;C:\windows\System32\Wbem;C:\windows\System32\WindowsPowerShell\v1.0\;C:\windows\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\ProgramData\chocolatey\bin;C:\Program Files\nodejs\;C:\Program Files (x86)\Yarn\bin\;C:\Program Files\OpenJDK\openjdk-11.0.10_9\bin;C:\Android\Sdk\emulator;C:\Android\Sdk\tools;C:\Android\Sdk\tools\bin;C:\Android\Sdk\platform-tools;C:\Users\iagon\AppData\Local\Yarn\bin;C:\Android\Sdk;C:\Program Files\Calibre2\;C:\Program Files\Git LFS;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;C:\Users\iagon\AppData\Local\Microsoft\WindowsApps;C:\Users\iagon\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\iagon\AppData\Roaming\npm;C:\Users\iagon\AppData\Local\Yarn\bin;C:\Android\Sdk;C:\Program Files\heroku\bin;C:\Users\iagon\AppData\Local\GitHubDesktop\bin
+  C:\Program Files (x86)\Common Files\Intel\Shared Libraries\redist\intel64\compiler;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;C:\ProgramData\chocolatey\bin;C:\Program Files\nodejs\;C:\Program Files (x86)\Yarn\bin\;C:\Program Files\OpenJDK\openjdk-11.0.10_9\bin;C:\Android\Sdk\emulator;C:\Android\Sdk\tools;C:\Android\Sdk\tools\bin;C:\Android\Sdk\platform-tools;C:\Users\iagon\AppData\Local\Yarn\bin;C:\Android\Sdk;C:\Program Files\Calibre2\;C:\Program Files\Git LFS;C:\Program Files\Docker\Docker\resources\bin;C:\ProgramData\DockerDesktop\version-bin;%USERPROFILE%\AppData\Local\Microsoft\WindowsApps;C:\Users\iagon\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\iagon\AppData\Roaming\npm;C:\Users\iagon\AppData\Local\Yarn\bin;C:\Android\Sdk;C:\Program Files\heroku\bin;C:\Users\iagon\AppData\Local\GitHubDesktop\bin;C:\Users\iagon\AppData\Local\hyper\app-3.0.2\resources\bin;
 
 Yarn version: 
   1.22.5

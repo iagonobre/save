@@ -121,6 +121,19 @@ const Home: React.FC = () => {
     if (!changelog) {
       navigate('DarkReward');
     }
+
+    if (
+      lastNotificationResponse &&
+      lastNotificationResponse.notification.request.content.data.period &&
+      lastNotificationResponse.notification.request.content.data.subject
+    ) {
+      navigate('Estudos', {
+        periodNotification:
+          lastNotificationResponse.notification.request.content.data.period,
+        subjectNotification:
+          lastNotificationResponse.notification.request.content.data.subject,
+      });
+    }
   }, [
     changelog,
     token,
@@ -130,25 +143,9 @@ const Home: React.FC = () => {
     matricula,
     registerForPushNotificationsAsync,
     handleCheckVersion,
+    lastNotificationResponse,
     getNotificationsInApp,
   ]);
-
-  useEffect(() => {
-    if (
-      lastNotificationResponse &&
-      lastNotificationResponse.notification.request.content.data.period &&
-      lastNotificationResponse.notification.request.content.data.subject &&
-      lastNotificationResponse.actionIdentifier ===
-        Notifications.DEFAULT_ACTION_IDENTIFIER
-    ) {
-      navigate('Estudos', {
-        periodNotification:
-          lastNotificationResponse.notification.request.content.data.period,
-        subjectNotification:
-          lastNotificationResponse.notification.request.content.data.subject,
-      });
-    }
-  }, [lastNotificationResponse, navigate]);
 
   return (
     <>
@@ -178,11 +175,11 @@ const Home: React.FC = () => {
               <ModeContainer>
                 <Name style={{ textAlign: 'left' }}>Progresso Anual</Name>
                 <Matricula style={{ textAlign: 'left' }}>
-                  100% completo
+                  24% completo
                 </Matricula>
               </ModeContainer>
               <ProgressBox>
-                <ProgressBar progress={100} />
+                <ProgressBar progress={24} />
               </ProgressBox>
             </ProgressContainer>
           )}

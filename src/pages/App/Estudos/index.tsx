@@ -72,6 +72,7 @@ interface RouteParams {
 }
 
 interface Boletim {
+  segundo_semestre: boolean;
   codigo_diario: string;
   disciplina: string;
   quantidade_avaliacoes: number;
@@ -87,6 +88,13 @@ interface Boletim {
   nota_etapa_4: {
     nota?: number;
   };
+}
+
+interface Grades {
+  nota1?: number;
+  nota2?: number;
+  nota3?: number;
+  nota4?: number;
 }
 
 const Estudos: React.FC = () => {
@@ -140,6 +148,40 @@ const Estudos: React.FC = () => {
           </GradeHeaderContainer>
           {boletins.map(boletim => {
             const [, name] = boletim.disciplina.split('- ');
+
+            function formatGrades(boletim: Boletim): Grades {
+              if (
+                boletim.segundo_semestre &&
+                boletim.quantidade_avaliacoes === 2
+              ) {
+                return {
+                  nota1: undefined,
+                  nota2: undefined,
+                  nota3: boletim.nota_etapa_1.nota,
+                  nota4: boletim.nota_etapa_2.nota,
+                };
+              }
+              if (
+                !boletim.segundo_semestre &&
+                boletim.quantidade_avaliacoes === 2
+              ) {
+                return {
+                  nota1: boletim.nota_etapa_1.nota,
+                  nota2: boletim.nota_etapa_2.nota,
+                  nota3: undefined,
+                  nota4: undefined,
+                };
+              }
+              return {
+                nota1: boletim.nota_etapa_1.nota,
+                nota2: boletim.nota_etapa_2.nota,
+                nota3: boletim.nota_etapa_3.nota,
+                nota4: boletim.nota_etapa_4.nota,
+              };
+            }
+
+            const grades = formatGrades(boletim);
+
             return (
               <RectButton
                 key={boletim.codigo_diario}
@@ -153,46 +195,30 @@ const Estudos: React.FC = () => {
                   <GradeSemestersContainer>
                     <Grade>
                       <GradeText
-                        redColor={
-                          boletim.nota_etapa_1.nota
-                            ? boletim.nota_etapa_1.nota < 60
-                            : false
-                        }
+                        redColor={grades.nota1 ? grades.nota1 < 60 : false}
                       >
-                        {boletim.nota_etapa_1.nota || '-'}
+                        {grades.nota1 || '-'}
                       </GradeText>
                     </Grade>
                     <Grade>
                       <GradeText
-                        redColor={
-                          boletim.nota_etapa_2.nota
-                            ? boletim.nota_etapa_2.nota < 60
-                            : false
-                        }
+                        redColor={grades.nota2 ? grades.nota2 < 60 : false}
                       >
-                        {boletim.nota_etapa_2.nota || '-'}
+                        {grades.nota2 || '-'}
                       </GradeText>
                     </Grade>
                     <Grade>
                       <GradeText
-                        redColor={
-                          boletim.nota_etapa_3.nota
-                            ? boletim.nota_etapa_3.nota < 60
-                            : false
-                        }
+                        redColor={grades.nota3 ? grades.nota3 < 60 : false}
                       >
-                        {boletim.nota_etapa_3.nota || '-'}
+                        {grades.nota3 || '-'}
                       </GradeText>
                     </Grade>
                     <Grade>
                       <GradeText
-                        redColor={
-                          boletim.nota_etapa_4.nota
-                            ? boletim.nota_etapa_4.nota < 60
-                            : false
-                        }
+                        redColor={grades.nota4 ? grades.nota4 < 60 : false}
                       >
-                        {boletim.nota_etapa_4.nota || '-'}
+                        {grades.nota4 || '-'}
                       </GradeText>
                     </Grade>
                   </GradeSemestersContainer>
@@ -347,15 +373,6 @@ const Estudos: React.FC = () => {
     setPeriodKey(period);
     getPeriods();
 
-    if (params) {
-      const { periodNotification, subjectNotification } = params as RouteParams;
-
-      if (periodNotification && subjectNotification) {
-        handleChangePeriod(periodNotification);
-        setSelectedSubject(subjectNotification);
-        setPage('Boletim');
-      }
-    }
     setPeriodLoading(false);
   }, [
     period,
@@ -368,6 +385,18 @@ const Estudos: React.FC = () => {
     periodKey,
     params,
   ]);
+
+  useEffect(() => {
+    if (params && materias && periods && boletins) {
+      const { periodNotification, subjectNotification } = params as RouteParams;
+
+      if (periodNotification && subjectNotification) {
+        handleChangePeriod(periodNotification);
+        setSelectedSubject(subjectNotification);
+        setPage('Boletim');
+      }
+    }
+  }, [params, materias, periods, boletins, handleChangePeriod]);
 
   return (
     <>
