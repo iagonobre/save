@@ -122,14 +122,11 @@ const Estudos: React.FC = () => {
     setPage(page);
   }, []);
 
-  const handleChangePeriod = useCallback(
-    (value: string) => {
-      setMaterias([]);
-      setPeriodKey(value);
-      setPeriod(value);
-    },
-    [setPeriodKey],
-  );
+  const handleChangePeriod = useCallback((value: string) => {
+    setMaterias([]);
+    setPeriodKey(value);
+    setPeriod(value);
+  }, []);
 
   const handleGetReports = useCallback(() => {
     return (
@@ -374,17 +371,7 @@ const Estudos: React.FC = () => {
     getPeriods();
 
     setPeriodLoading(false);
-  }, [
-    period,
-    setPeriodKey,
-    handleChangePeriod,
-    renew,
-    token,
-    goBack,
-    matricula,
-    periodKey,
-    params,
-  ]);
+  }, [renew, token, goBack, matricula, params]);
 
   useEffect(() => {
     if (params && materias && periods && boletins) {

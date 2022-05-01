@@ -173,13 +173,14 @@ const Home: React.FC = () => {
           {!loading && (
             <ProgressContainer>
               <ModeContainer>
-                <Name style={{ textAlign: 'left' }}>Progresso Anual</Name>
+                <Name style={{ textAlign: 'left' }}>Novidades</Name>
                 <Matricula style={{ textAlign: 'left' }}>
-                  24% completo
+                  Uma nova atualização está por vir, confira nosso instagram:
+                  @app.save
                 </Matricula>
               </ModeContainer>
               <ProgressBox>
-                <ProgressBar progress={24} />
+                <ProgressBar progress={100} />
               </ProgressBox>
             </ProgressContainer>
           )}

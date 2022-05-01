@@ -13,7 +13,7 @@ import {
   ButtonText,
 } from './styles';
 
-import landingImage from '../../../assets/images/landing-background.png';
+import landingImage from '../../../assets/images/mockup.png';
 import studyIcon from '../../../assets/images/icons/study.png';
 import faqIcon from '../../../assets/images/icons/faq.png';
 
@@ -38,21 +38,8 @@ const Landing: React.FC = () => {
         <Title>
           Seja bem vindo,
           {'\n'}
-          <TitleBold>O que deseja fazer?</TitleBold>
+          <TitleBold>Estamos de mudança!</TitleBold>
         </Title>
-
-        <ButtonsContainer>
-          <Button onPress={handleNavigateToFaq}>
-            <Image source={faqIcon} />
-
-            <ButtonText>Políticas</ButtonText>
-          </Button>
-          <ButtonSecondary onPress={handleNavigateToLoginPage}>
-            <Image source={studyIcon} />
-
-            <ButtonText>Acessar</ButtonText>
-          </ButtonSecondary>
-        </ButtonsContainer>
       </ActionContainer>
     </>
   );
